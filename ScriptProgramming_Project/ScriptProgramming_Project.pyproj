@@ -1,0 +1,76 @@
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>067850b2-6b4a-4b2e-94d9-d2043355ee31</ProjectGuid>
+    <ProjectHome>.</ProjectHome>
+    <StartupFile>main.py</StartupFile>
+    <SearchPath>
+    </SearchPath>
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <Name>ScriptProgramming_Project</Name>
+    <RootNamespace>ScriptProgramming_Project</RootNamespace>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="main.py" />
+    <Compile Include="pyre\commands\command.py" />
+    <Compile Include="pyre\commands\move_backward.py" />
+    <Compile Include="pyre\commands\move_forward.py" />
+    <Compile Include="pyre\commands\rotate_hull_left.py" />
+    <Compile Include="pyre\commands\rotate_hull_right.py" />
+    <Compile Include="pyre\commands\rotate_turret_left.py" />
+    <Compile Include="pyre\commands\rotate_turret_right.py" />
+    <Compile Include="pyre\commands\toggle_collider_debug.py" />
+    <Compile Include="pyre\components\colliders\base_collider.py" />
+    <Compile Include="pyre\components\colliders\__init__.py" />
+    <Compile Include="pyre\components\movement.py" />
+    <Compile Include="pyre\entities\entity.py" />
+    <Compile Include="pyre\commands\__init__.py" />
+    <Compile Include="pyre\managers\__init__.py" />
+    <Compile Include="pyre\managers\system_manager.py" />
+    <Compile Include="pyre\entities\__init__.py" />
+    <Compile Include="pyre\components\base_component.py" />
+    <Compile Include="pyre\components\colliders\box_collider.py" />
+    <Compile Include="pyre\components\colliders\circle_collider.py" />
+    <Compile Include="pyre\components\sprite.py" />
+    <Compile Include="pyre\components\transform.py" />
+    <Compile Include="pyre\components\__init__.py" />
+    <Compile Include="pyre\game.py" />
+    <Compile Include="pyre\managers\input_manager.py" />
+    <Compile Include="pyre\systems\collision_system.py" />
+    <Compile Include="pyre\systems\movement_system.py" />
+    <Compile Include="pyre\systems\render_system.py" />
+    <Compile Include="pyre\systems\base_system.py" />
+    <Compile Include="pyre\systems\transform_system.py" />
+    <Compile Include="pyre\systems\__init__.py" />
+    <Compile Include="pyre\window.py" />
+    <Compile Include="pyre\__init__.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="pyre\" />
+    <Folder Include="pyre\components\" />
+    <Folder Include="pyre\components\colliders\" />
+    <Folder Include="pyre\entities\" />
+    <Folder Include="pyre\managers\" />
+    <Folder Include="pyre\commands\" />
+    <Folder Include="pyre\systems\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
+  <!-- Uncomment the CoreCompile target to enable the Build command in
+       Visual Studio and specify your pre- and post-build commands in
+       the BeforeBuild and AfterBuild targets below. -->
+  <!--<Target Name="CoreCompile" />-->
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+</Project>
