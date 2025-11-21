@@ -3,5 +3,5 @@ from abc import ABC, abstractmethod
 
 class Command(ABC):
     @abstractmethod
-    def Execute(self) -> None:
+    def Execute(self, *args, **kwargs) -> None:
         pass

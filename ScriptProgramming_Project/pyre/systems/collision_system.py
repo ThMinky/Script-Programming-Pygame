@@ -1,8 +1,6 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
-import warnings
 
-from click import password_option
 import pygame
 
 from pyre.systems import BaseSystem
@@ -23,11 +21,6 @@ class CollisionSystem(BaseSystem):
 
     def __init__(self) -> None:
         if CollisionSystem.__instance is not None:
-            warnings.warn(
-                "Attempted to create another instance of CollisionSystem (singleton violation)",
-                category=UserWarning,
-                stacklevel=2,
-            )
             return
 
         CollisionSystem.__instance = self
@@ -41,23 +34,10 @@ class CollisionSystem(BaseSystem):
                 self.m_comps.append(comp)
 
     def Unregister(self, comp: "BaseComponent") -> None:
-        if comp in self.m_comps:
-            self.m_comps.remove(comp)
+        from pyre.components.colliders import BaseCollider
 
-    def Update(self, dt) -> None:
-        super().Update(dt)
+        if isinstance(comp, BaseCollider):
+            if comp in self.m_comps:
+                self.m_comps.remove(comp)
 
-        from pyre.components import Transform, Sprite
-        from pyre.components.colliders import BoxCollider, CircleCollider
-
-        for collider in self.m_comps:
-            transformComp = collider.m_parent.GetComponent(Transform)
-            if collider.m_isDirty:
-                collider.DirtyUpdate()
-
-            if isinstance(collider, BoxCollider):
-                collider.m_worldPos = (
-                    transformComp.m_worldPos - collider.m_size / 2 + collider.m_offset
-                )
-            elif isinstance(collider, CircleCollider):
-                collider.m_worldPos = transformComp.m_worldPos + collider.m_offset
+     

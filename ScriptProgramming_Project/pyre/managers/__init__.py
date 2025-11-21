@@ -1,4 +1,4 @@
-from pyre.managers.system_manager import SystemManager
-from pyre.managers.input_manager import InputManager
+from .behaviour_manager import BehaviourManager
+from .system_manager import SystemManager
 
-__all__ = ["SystemManager", "InputManager"]
+__all__ = ["BehaviourManager", "SystemManager"]

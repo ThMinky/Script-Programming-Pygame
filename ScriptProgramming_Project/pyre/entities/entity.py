@@ -52,9 +52,8 @@ class Entity:
         return None
 
     def GetComponents(self, compType: Type[T]) -> list[T]:
-        components = []
-
+        temp = []
         for comp in self.m_comps:
             if isinstance(comp, compType):
-                components.append(comp)
-        return components
+                temp.append(comp)
+        return temp

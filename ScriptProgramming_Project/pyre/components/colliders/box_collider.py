@@ -1,17 +1,16 @@
-import math
+from __future__ import annotations
+from typing import TYPE_CHECKING
 
 import pygame
 
 from pyre.components.colliders import BaseCollider
 
+if TYPE_CHECKING:
+    from pyre.components import Transform
+
 
 class BoxCollider(BaseCollider):
-    def __init__(
-        self,
-        *,
-        offset: pygame.Vector2 | None = None,
-        size: pygame.Vector2 | None = None
-    ) -> None:
+    def __init__(self, *, offset: pygame.Vector2 | None = None, size: pygame.Vector2 | None = None) -> None:
         super().__init__(offset=offset)
 
         self.m_size: pygame.Vector2 = size if size is not None else None
@@ -19,57 +18,69 @@ class BoxCollider(BaseCollider):
     def Init(self) -> None:
         super().Init()
 
+        from pyre.components.transform import Transform
+
+        transform = self.m_parent.GetComponent(Transform)
+
+        transform.m_onPositionChanged.Add(self.UpdatePosition)
+        transform.m_onPositionChanged.Add(self.UpdateBounds)
+        transform.m_onRotationChanged.Add(self.UpdatePosition)
+        transform.m_onRotationChanged.Add(self.UpdateBounds)
+        transform.m_onScaleChanged.Add(self.UpdatePosition)
+        transform.m_onScaleChanged.Add(self.UpdateBounds)
+
+        self.UpdatePosition()
+        self.UpdateBounds()
+
     def Uninit(self) -> None:
         super().Uninit()
 
-    def DirtyUpdate(self) -> None:
-        super().DirtyUpdate()
+        from pyre.components.transform import Transform
 
-        from pyre.components import Transform, Sprite
+        transform = self.m_parent.GetComponent(Transform)
 
-        transformComp = self.m_parent.GetComponent(Transform)
-        spriteComp = self.m_parent.GetComponent(Sprite)
+        transform.m_onPositionChanged.Remove(self.UpdatePosition)
+        transform.m_onPositionChanged.Remove(self.UpdateBounds)
+        transform.m_onRotationChanged.Remove(self.UpdatePosition)
+        transform.m_onRotationChanged.Remove(self.UpdateBounds)
+        transform.m_onScaleChanged.Remove(self.UpdatePosition)
+        transform.m_onScaleChanged.Remove(self.UpdateBounds)
+
+    def UpdatePosition(self) -> None:
+        from pyre.components.transform import Transform
+
+        transform = self.m_parent.GetComponent(Transform)
+        self.m_worldPos = transform.m_worldPos + self.m_offset
+
+    def UpdateBounds(self) -> None:
+        from pyre.components.transform import Transform
+        from pyre.components import Sprite
+
+        transform = self.m_parent.GetComponent(Transform)
+        sprite = self.m_parent.GetComponent(Sprite)
 
         if self.m_size is None:
-            if spriteComp:
-                textureSize = pygame.Vector2(spriteComp.m_originalTexture.get_size())
-                self.m_size = textureSize.elementwise() * transformComp.m_worldScale.elementwise()
+            if sprite:
+                textureSize = pygame.Vector2(sprite.m_originalTexture.get_size())
+                self.m_size = textureSize.elementwise() * transform.m_worldScale.elementwise()
             else:
                 self.m_size = pygame.Vector2(1, 1)
-        
-        self.m_isDirty = False
 
     def DrawBounds(self, surface: pygame.Surface) -> None:
-        rect = pygame.Rect(
-            int(self.m_worldPos.x),
-            int(self.m_worldPos.y),
-            int(self.m_size.x),
-            int(self.m_size.y),
+        from pyre.components.transform import Transform
+        from pyre.utils.math_utils import ERectPoints, GetRotatedRectCorners
+
+        transform = self.m_parent.GetComponent(Transform)
+
+        corners = GetRotatedRectCorners(
+            self.m_worldPos,
+            self.m_size,
+            transform.m_worldRot,
+            ERectPoints.CENTER,
         )
 
-        pygame.draw.rect(surface, (255, 0, 0), rect, 1)
+        points = []
+        for corner in corners:
+            points.append((corner.x, corner.y))
 
-    def GetRotatedCorners(self) -> list[pygame.Vector2]:
-        from pyre.components import Transform
-
-        w, h = self.m_size.x / 2, self.m_size.y / 2
-        localCorners = [
-            pygame.Vector2(-w, -h),
-            pygame.Vector2(w, -h),
-            pygame.Vector2(w, h),
-            pygame.Vector2(-w, h),
-        ]
-
-        angleRad = math.radians(self.m_parent.GetComponent(Transform).m_worldRot)
-        cosA = math.cos(angleRad)
-        sinA = math.sin(angleRad)
-
-        rotatedCorners = []
-        for corner in localCorners:
-            rotatedX = corner.x * cosA - corner.y * sinA
-            rotatedY = corner.x * sinA + corner.y * cosA
-
-            worldCorner = pygame.Vector2(rotatedX, rotatedY) + self.m_worldPos
-            rotatedCorners.append(worldCorner)
-
-        return rotatedCorners
+        pygame.draw.polygon(surface, (255, 0, 0), points, 1)

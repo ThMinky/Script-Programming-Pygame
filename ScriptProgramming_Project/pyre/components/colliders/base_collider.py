@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-import math
 
 import pygame
 
@@ -14,11 +13,8 @@ class BaseCollider(BaseComponent, ABC):
     ) -> None:
         super().__init__()
 
-        self.m_offset: pygame.Vector2 = (
-            offset if offset is not None else pygame.Vector2(0, 0)
-        )
+        self.m_offset: pygame.Vector2 = offset if offset is not None else pygame.Vector2(0, 0)
         self.m_worldPos: pygame.Vector2 = None
-        self.m_isDirty: bool = True
 
     def Init(self) -> None:
         super().Init()
@@ -26,7 +22,12 @@ class BaseCollider(BaseComponent, ABC):
     def Uninit(self) -> None:
         super().Uninit()
 
-    def DirtyUpdate(self) -> None:
+    @abstractmethod
+    def UpdatePosition(self) -> None:
+        pass
+
+    @abstractmethod
+    def UpdateBounds(self) -> None:
         pass
 
     @abstractmethod

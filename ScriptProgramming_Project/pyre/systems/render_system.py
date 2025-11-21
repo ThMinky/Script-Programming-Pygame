@@ -1,14 +1,12 @@
 from __future__ import annotations
-import math
 from typing import TYPE_CHECKING
-import warnings
 
 import pygame
 
 from pyre.systems import BaseSystem
 
 if TYPE_CHECKING:
-    from pyre.components import BaseComponent, Transform, Sprite
+    from pyre.components import BaseComponent, Sprite, Transform
 
 
 class RenderSystem(BaseSystem):
@@ -22,50 +20,45 @@ class RenderSystem(BaseSystem):
 
     def __init__(self) -> None:
         if RenderSystem.__instance is not None:
-            warnings.warn(
-                "Attempted to create another instance of RenderSystem (singleton violation)",
-                category=UserWarning,
-                stacklevel=2,
-            )
             return
-        else:
-            RenderSystem.__instance = self
-            self.m_comps: list["Sprite"] = []
-            self.m_sorted: bool = False
-            self.m_debugColliders: bool = True
+
+        RenderSystem.__instance = self
+        self._m_sprites: list["Sprite"] = []
+        self._m_to_add: set["Sprite"] = set()
+        self._m_to_remove: set["Sprite"] = set()
+        self._m_sorted: bool = False
+        self.m_debugColliders: bool = True
 
     def Register(self, comp: "BaseComponent") -> None:
         from pyre.components import Sprite
 
         if isinstance(comp, Sprite):
-            if comp not in self.m_comps:
-                self.m_comps.append(comp)
-                self.m_sorted = False
+            self._m_to_add.add(comp)
+            self._m_sorted = False
 
     def Unregister(self, comp: "BaseComponent") -> None:
-        if comp in self.m_comps:
-            self.m_comps.remove(comp)
+        from pyre.components import Sprite
 
-    def Update(self, dt: float) -> None:
-        super().Update(dt)
+        if isinstance(comp, Sprite):
+            self._m_to_remove.add(comp)
 
     def Render(self, surface: pygame.Surface) -> None:
+        super().Update()
+
         from pyre.components import Transform
         from pyre.components.colliders import BaseCollider
 
-        if not self.m_sorted:
+        self._FlushChanges()
+
+        if not self._m_sorted:
             self._SortSprites()
 
-        for sprite in self.m_comps:
-            transformComp = sprite.m_parent.GetComponent(Transform)
-            if sprite.m_isDirty:
-                sprite.DirtyUpdate(transformComp)
+        for sprite in self._m_sprites:
+            transform = sprite.m_parent.GetComponent(Transform)
 
-            rect = self._CalcPivot(sprite, transformComp)
+            rotatedSprite = pygame.transform.rotate(sprite.m_texture, -transform.m_worldRot)
 
-            rotatedSprite = pygame.transform.rotate(
-                sprite.m_texture, -transformComp.m_worldRot
-            )
+            rect = rotatedSprite.get_rect(center=transform.m_worldPos)
 
             surface.blit(rotatedSprite, rect.topleft)
 
@@ -74,59 +67,37 @@ class RenderSystem(BaseSystem):
                 for collider in colliders:
                     collider.DrawBounds(surface)
 
+    def _FlushChanges(self) -> None:
+        for sprite in self._m_to_remove:
+            if sprite in self._m_sprites:
+                self._m_sprites.remove(sprite)
+
+        self._m_sprites.extend(self._m_to_add)
+        self._m_to_add.clear()
+
     def _SortSprites(self) -> None:
         from pyre.components import Transform
-        
-        for sprite in self.m_comps:
-            transformComp = sprite.m_parent.GetComponent(Transform)
-            if transformComp.m_parentTransform is None:
-                self._AssignHierarchyLayer(transformComp)
 
-        self.m_comps.sort(key=lambda s: s.m_layer)
-        self.m_sorted = True
+        for sprite in self._m_sprites:
+            transform = sprite.m_parent.GetComponent(Transform)
+            if transform.m_parentTransform is None:
+                self._AssignHierarchyLayer(transform)
 
-    def _AssignHierarchyLayer(
-        self, transformComp: "Transform", baseLayer: int = 0
-    ) -> None:
+        self._m_sprites.sort(key=lambda s: s.m_layer)
+        self._m_sorted = True
+
+    def _AssignHierarchyLayer(self, transform: "Transform", baseLayer: int = 0) -> None:
         from pyre.components import Sprite
 
-        spriteComp = transformComp.m_parent.GetComponent(Sprite)
+        sprite = transform.m_parent.GetComponent(Sprite)
         currentLayer = baseLayer
 
-        if spriteComp:
-            if spriteComp.m_layer == 0:
-                spriteComp.m_layer = baseLayer + 1
+        if sprite:
+            if sprite.m_layer == 0:
+                sprite.m_layer = baseLayer + 1
                 currentLayer = baseLayer + 1
             else:
-                currentLayer = spriteComp.m_layer + 1
+                currentLayer = sprite.m_layer + 1
 
-        for child in transformComp.m_childrenTransforms:
+        for child in transform.m_childrenTransforms:
             self._AssignHierarchyLayer(child, currentLayer)
-
-    def _CalcPivot(self, sprite: Sprite, transformComp) -> pygame.Rect:
-        # Rotate the sprite surface
-        rotated_sprite = pygame.transform.rotate(sprite.m_texture, -transformComp.m_worldRot)
-
-        if sprite.m_pivot is None:
-            # Default: rotate around center
-            rect = rotated_sprite.get_rect(center=transformComp.m_worldPos)
-            return rect
-
-        # Custom pivot
-        sprite_size = pygame.Vector2(sprite.m_texture.get_size())
-        pivot = sprite.m_pivot
-
-        # Vector from pivot to center
-        offset = sprite_size / 2 - pivot
-
-        # Rotate the offset
-        angle_rad = math.radians(transformComp.m_worldRot)
-        rotated_offset = pygame.Vector2(
-            offset.x * math.cos(angle_rad) - offset.y * math.sin(angle_rad),
-            offset.x * math.sin(angle_rad) + offset.y * math.cos(angle_rad)
-        )
-
-        # Create rect with top-left adjusted so pivot aligns with world position
-        rect = rotated_sprite.get_rect()
-        rect.topleft = transformComp.m_worldPos - rotated_offset
-        return rect

@@ -1,7 +1,5 @@
-from pyre.systems.base_system import BaseSystem
-from pyre.systems.transform_system import TransformSystem
-from pyre.systems.render_system import RenderSystem
-from pyre.systems.collision_system import CollisionSystem
-from pyre.systems.movement_system import MovementSystem
+from .base_system import BaseSystem
+from .collision_system import CollisionSystem
+from .render_system import RenderSystem
 
-__all__ = ["BaseSystem", "TransformSystem", "RenderSystem", "CollisionSystem", "MovementSystem"]
+__all__ = ["BaseSystem", "CollisionSystem", "RenderSystem"]

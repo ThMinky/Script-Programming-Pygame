@@ -1,3 +1,3 @@
-from pyre.entities.entity import Entity
+from .entity import Entity
 
 __all__ = ["Entity"]

@@ -2,14 +2,18 @@ import os
 
 import pygame
 
-from pyre import Game
+from pyre.display import Window
+from pyre.managers import SystemManager, InputManager
 
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
-game = Game()
-game.Init(1280, 720, "BlastField")
+# ///////////////////////////////////////////////////////////////////////////
+# ENGINE INIT
+pygame.init()
+window = pyre.display.Window(1280, 720, "BlastField")
+clock = pygame.time.Clock()
 
-game.Loop()
 
-game.Uninit()
+
+# ///////////////////////////////////////////////////////////////////////////

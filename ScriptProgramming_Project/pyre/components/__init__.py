@@ -1,6 +1,5 @@
-from pyre.components.base_component import BaseComponent
-from pyre.components.transform import Transform
-from pyre.components.sprite import Sprite
-from pyre.components.movement import Movement
+from .base_component import BaseComponent
+from .sprite import Sprite
+from .transform import Transform
 
-__all__ = ["BaseComponent", "Transform", "Sprite", "Movement"]
+__all__ = ["BaseComponent", "Sprite", "Transform"]
