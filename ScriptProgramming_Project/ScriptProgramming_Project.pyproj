@@ -37,6 +37,8 @@
     <Compile Include="game\player\move_commands\rotate_turret_right.py" />
     <Compile Include="pyre\commands\toggle_colliders_debug.py" />
     <Compile Include="pyre\components\colliders\base_collider.py" />
+    <Compile Include="pyre\components\colliders\point_collider.py" />
+    <Compile Include="pyre\components\colliders\line_collider.py" />
     <Compile Include="pyre\components\colliders\__init__.py" />
     <Compile Include="pyre\entities\entity.py" />
     <Compile Include="pyre\commands\__init__.py" />
@@ -59,6 +61,7 @@
     <Compile Include="pyre\systems\render_system.py" />
     <Compile Include="pyre\systems\base_system.py" />
     <Compile Include="pyre\systems\__init__.py" />
+    <Compile Include="pyre\utils\collision_utils.py" />
     <Compile Include="pyre\utils\math_utils.py" />
     <Compile Include="pyre\utils\__init__.py" />
     <Compile Include="pyre\display\window.py" />

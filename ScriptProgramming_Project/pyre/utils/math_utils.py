@@ -4,96 +4,64 @@ import math
 import pygame
 
 
-class ERectPoints(Enum):
+class ERectPivots(Enum):
     TOP_LEFT = auto()
-    TOP_CENTER = auto()
     TOP_RIGHT = auto()
-    RIGHT_CENTER = auto()
     BOTTOM_RIGHT = auto()
-    BOTTOM_CENTER = auto()
     BOTTOM_LEFT = auto()
+    TOP_CENTER = auto()
+    RIGHT_CENTER = auto()
+    BOTTOM_CENTER = auto()
     LEFT_CENTER = auto()
     CENTER = auto()
 
 
-RECT_PIVOT_OFFSETS = {
-    ERectPoints.TOP_LEFT: (-0.5, -0.5),
-    ERectPoints.TOP_CENTER: (0, -0.5),
-    ERectPoints.TOP_RIGHT: (0.5, -0.5),
-    ERectPoints.RIGHT_CENTER: (0.5, 0),
-    ERectPoints.BOTTOM_RIGHT: (0.5, 0.5),
-    ERectPoints.BOTTOM_CENTER: (0, 0.5),
-    ERectPoints.BOTTOM_LEFT: (-0.5, 0.5),
-    ERectPoints.CENTER: (0, 0),
+RECT_PIVOT_OFFSETS_FROM_CENTER: dict[ERectPivots, pygame.Vector2] = {
+    ERectPivots.TOP_LEFT: pygame.Vector2(-0.5, -0.5),
+    ERectPivots.TOP_RIGHT: pygame.Vector2(0.5, -0.5),
+    ERectPivots.BOTTOM_RIGHT: pygame.Vector2(0.5, 0.5),
+    ERectPivots.BOTTOM_LEFT: pygame.Vector2(-0.5, 0.5),
+    ERectPivots.TOP_CENTER: pygame.Vector2(0, -0.5),
+    ERectPivots.RIGHT_CENTER: pygame.Vector2(0.5, 0),
+    ERectPivots.BOTTOM_CENTER: pygame.Vector2(0, 0.5),
+    ERectPivots.LEFT_CENTER: pygame.Vector2(-0.5, 0),
+    ERectPivots.CENTER: pygame.Vector2(0, 0),
 }
 
-RECT_CORNER_PATTERNS = {
-    ERectPoints.TOP_LEFT: [
-        (0, 0),
-        (1, 0),
-        (1, 1),
-        (0, 1),
-    ],
-    ERectPoints.TOP_CENTER: [
-        (-0.5, 0),
-        (0.5, 0),
-        (0.5, 1),
-        (-0.5, 1),
-    ],
-    ERectPoints.TOP_RIGHT: [
-        (-1, 0),
-        (0, 0),
-        (0, 1),
-        (-1, 1),
-    ],
-    ERectPoints.RIGHT_CENTER: [
-        (-1, -0.5),
-        (0, -0.5),
-        (0, 0.5),
-        (-1, 0.5),
-    ],
-    ERectPoints.BOTTOM_RIGHT: [
-        (-1, -1),
-        (0, -1),
-        (0, 0),
-        (-1, 0),
-    ],
-    ERectPoints.BOTTOM_CENTER: [
-        (-0.5, -1),
-        (0.5, -1),
-        (0.5, 0),
-        (-0.5, 0),
-    ],
-    ERectPoints.BOTTOM_LEFT: [
-        (0, -1),
-        (1, -1),
-        (1, 0),
-        (0, 0),
-    ],
-    ERectPoints.CENTER: [
-        (-0.5, -0.5),
-        (0.5, -0.5),
-        (0.5, 0.5),
-        (-0.5, 0.5),
-    ],
-}
+RECT_CORNER_OFFSETS_FROM_CENTER: list[pygame.Vector2] = [
+    pygame.Vector2(-0.5, -0.5),
+    pygame.Vector2(0.5, -0.5),
+    pygame.Vector2(0.5, 0.5),
+    pygame.Vector2(-0.5, 0.5),
+]
+
+
+def GetRectCorners(
+    worldPos: pygame.Vector2,
+    size: pygame.Vector2,
+) -> list[pygame.Vector2]:
+
+    corners = []
+    for offset in RECT_CORNER_OFFSETS_FROM_CENTER:
+        corner = worldPos + (size.elementwise() * offset.elementwise())
+        corners.append(corner)
+
+    return corners
 
 
 def GetRotatedRectCorners(
     worldPos: pygame.Vector2,
     size: pygame.Vector2,
     angleDeg: float,
-    pivotType: ERectPoints,
+    pivotType: ERectPivots,
 ) -> list[pygame.Vector2]:
-    pivot = pygame.Vector2(
-        worldPos.x + size.x * RECT_PIVOT_OFFSETS[pivotType][0],
-        worldPos.y + size.y * RECT_PIVOT_OFFSETS[pivotType][1],
-    )
 
     corners = []
-    for x, y in RECT_CORNER_PATTERNS[pivotType]:
-        corner = pygame.Vector2(worldPos.x + size.x * x, worldPos.y + size.y * y)
+    for offset in RECT_CORNER_OFFSETS_FROM_CENTER:
+        corner = worldPos + (size.elementwise() * offset.elementwise())
         corners.append(corner)
+
+    pivot = worldPos + (size.elementwise() * RECT_PIVOT_OFFSETS_FROM_CENTER[pivotType].elementwise())
 
     rotatedCorners = []
     for corner in corners:

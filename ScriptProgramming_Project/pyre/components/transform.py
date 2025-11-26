@@ -49,12 +49,12 @@ class Transform(BaseComponent):
                 self.m_parentTransform.m_childrenTransforms.append(self)
 
     def Uninit(self) -> None:
-        super().Uninit()
-
         if self.m_parentTransform:
             if self in self.m_parentTransform.m_childrenTransforms:
                 self.m_parentTransform.m_childrenTransforms.remove(self)
             self.m_parentTransform = None
+
+        super().Uninit()
 
     def SetPosition(self, newPos: pygame.Vector2) -> None:
         self.m_localPos = newPos
@@ -90,6 +90,8 @@ class Transform(BaseComponent):
         for child in self.m_childrenTransforms:
             child._UpdateWorldRotation()
 
+        self._UpdateWorldPosition()
+
         self.m_onRotationChanged.Fire()
 
     def _UpdateWorldScale(self):
@@ -100,6 +102,8 @@ class Transform(BaseComponent):
 
         for child in self.m_childrenTransforms:
             child._UpdateWorldScale()
+
+        self._UpdateWorldPosition()
 
         self.m_onScaleChanged.Fire()
 
