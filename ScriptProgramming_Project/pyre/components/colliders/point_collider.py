@@ -19,6 +19,12 @@ class PointCollider(BaseCollider):
 
         super().Uninit()
 
+    def Enable(self) -> None:
+        super().Enable()
+
+    def Disable(self) -> None:
+        super().Disable()
+
     def UpdatePosition(self) -> None:
         super().UpdatePosition()
 

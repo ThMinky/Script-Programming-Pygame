@@ -1,3 +1,5 @@
 from .input import Input
 
-__all__ = ["Input"]
+__all__ = [
+    "Input",
+]

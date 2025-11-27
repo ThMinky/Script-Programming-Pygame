@@ -7,7 +7,8 @@ if TYPE_CHECKING:
 
 class BaseComponent:
     def __init__(self) -> None:
-        self.m_parent: "Entity" = None
+        self.m_parent: "Entity" | None = None
+        self.m_enabled: bool = True
 
     def Init(self) -> None:
         from pyre.managers.system_manager import SystemManager
@@ -24,3 +25,29 @@ class BaseComponent:
 
         if system:
             system.Unregister(self)
+
+    def Enable(self) -> None:
+        if self.m_enabled:
+            return
+
+        from pyre.managers.system_manager import SystemManager
+
+        system = SystemManager.GetInstance().GetSystemInstanceForComponent(self)
+
+        if system:
+            system.Register(self)
+
+        self.m_enabled = True
+
+    def Disable(self) -> None:
+        if not self.m_enabled:
+            return
+
+        from pyre.managers.system_manager import SystemManager
+
+        system = SystemManager.GetInstance().GetSystemInstanceForComponent(self)
+
+        if system:
+            system.Unregister(self)
+
+        self.m_enabled = False

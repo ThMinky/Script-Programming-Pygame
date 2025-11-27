@@ -57,3 +57,8 @@ class Entity:
             if isinstance(comp, compType):
                 temp.append(comp)
         return temp
+
+    def Destroy(self):
+        for comp in self.m_comps:
+            comp.Uninit()
+        self.m_comps.clear()

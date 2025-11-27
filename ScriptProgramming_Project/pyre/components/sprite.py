@@ -46,6 +46,12 @@ class Sprite(BaseComponent):
 
         super().Uninit()
 
+    def Enable(self) -> None:
+        super().Enable()
+
+    def Disable(self) -> None:
+        super().Disable()
+
     def UpdateScale(self) -> None:
         textureSize = pygame.Vector2(self.m_originalTexture.get_size())
         scaledSize = textureSize.elementwise() * self.m_transform.m_worldScale.elementwise()

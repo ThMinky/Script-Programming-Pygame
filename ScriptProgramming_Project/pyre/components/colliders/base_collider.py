@@ -37,8 +37,14 @@ class BaseCollider(BaseComponent, ABC):
 
         super().Uninit()
 
+    def Enable(self) -> None:
+        super().Enable()
+
+    def Disable(self) -> None:
+        super().Disable()
+
     def UpdatePosition(self) -> None:
-        self.m_worldPos = self.transform.m_worldPos + self.m_offset
+        self.m_worldPos = self.m_transform.m_worldPos + self.m_offset
 
     @abstractmethod
     def UpdateBounds(self) -> None:

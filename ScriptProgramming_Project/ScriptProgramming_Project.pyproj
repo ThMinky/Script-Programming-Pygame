@@ -26,8 +26,7 @@
     <Compile Include="game\player\__init__.py" />
     <Compile Include="game\__init__.py" />
     <Compile Include="main.py" />
-    <Compile Include="pyre\behaviours\behaviour.py" />
-    <Compile Include="pyre\behaviours\__init__.py" />
+    <Compile Include="pyre\components\script.py" />
     <Compile Include="pyre\commands\command.py" />
     <Compile Include="game\player\move_commands\move_backward.py" />
     <Compile Include="game\player\move_commands\move_forward.py" />
@@ -45,7 +44,7 @@
     <Compile Include="pyre\events\event.py" />
     <Compile Include="pyre\events\__init__.py" />
     <Compile Include="pyre\inputs\__init__.py" />
-    <Compile Include="pyre\managers\behaviour_manager.py" />
+    <Compile Include="pyre\systems\script_system.py" />
     <Compile Include="pyre\managers\__init__.py" />
     <Compile Include="pyre\managers\system_manager.py" />
     <Compile Include="pyre\entities\__init__.py" />
@@ -57,16 +56,17 @@
     <Compile Include="pyre\components\__init__.py" />
     <Compile Include="pyre\inputs\input.py" />
     <Compile Include="pyre\systems\collision_system.py" />
-    <Compile Include="game\movement_system.py" />
     <Compile Include="pyre\systems\render_system.py" />
     <Compile Include="pyre\systems\base_system.py" />
     <Compile Include="pyre\systems\__init__.py" />
+    <Compile Include="pyre\time.py" />
     <Compile Include="pyre\utils\collision_utils.py" />
     <Compile Include="pyre\utils\math_utils.py" />
     <Compile Include="pyre\utils\__init__.py" />
     <Compile Include="pyre\display\window.py" />
     <Compile Include="pyre\display\__init__.py" />
     <Compile Include="pyre\__init__.py" />
+    <Compile Include="scene.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="game\" />
@@ -81,7 +81,6 @@
     <Folder Include="pyre\events\" />
     <Folder Include="pyre\display\" />
     <Folder Include="pyre\inputs\" />
-    <Folder Include="pyre\behaviours\" />
     <Folder Include="pyre\utils\" />
     <Folder Include="pyre\systems\" />
   </ItemGroup>

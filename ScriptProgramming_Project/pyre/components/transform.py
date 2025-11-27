@@ -33,7 +33,7 @@ class Transform(BaseComponent):
         self.m_parentTransform: "Transform" = parentTransform
         self.m_childrenTransforms: list["Transform"] = []
 
-        from pyre.event import Event
+        from pyre.events import Event
 
         self.m_onPositionChanged: "Event" = Event()
         self.m_onRotationChanged: "Event" = Event()
@@ -55,6 +55,12 @@ class Transform(BaseComponent):
             self.m_parentTransform = None
 
         super().Uninit()
+
+    def Enable(self) -> None:
+        pass
+
+    def Disable(self) -> None:
+        pass
 
     def SetPosition(self, newPos: pygame.Vector2) -> None:
         self.m_localPos = newPos

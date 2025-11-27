@@ -14,15 +14,21 @@ class BoxCollider(BaseCollider):
 
         self.m_transform.m_onPositionChanged.Add(self.UpdatePosition)
         self.m_transform.m_onPositionChanged.Add(self.UpdateBounds)
-         
+
         self.UpdatePosition()
         self.UpdateBounds()
 
     def Uninit(self) -> None:
         self.m_transform.m_onPositionChanged.Remove(self.UpdatePosition)
         self.m_transform.m_onPositionChanged.Remove(self.UpdateBounds)
-       
+
         super().Uninit()
+
+    def Enable(self) -> None:
+        super().Enable()
+
+    def Disable(self) -> None:
+        super().Disable()
 
     def UpdatePosition(self) -> None:
         super().UpdatePosition()

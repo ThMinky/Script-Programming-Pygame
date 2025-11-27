@@ -1,13 +1,9 @@
-from .behaviours import (
-    Behaviour,
-)
-
 from .commands import (
     Command, ToggleCollidersDebug,
 )
 
 from .components import (
-    BaseComponent, Sprite, Transform,
+    BaseComponent, Script, Sprite, Transform,
 )
 
 from .components.colliders import ( 
@@ -31,29 +27,39 @@ from .inputs import (
 )
 
 from .managers import ( 
-    BehaviourManager, SystemManager,
+    SystemManager,
 )
 
 from .systems import (
-    BaseSystem, CollisionSystem, RenderSystem,
+    BaseSystem, CollisionSystem, RenderSystem, ScriptSystem,
 )
 
 from .utils import (
+    BoxBox, BoxCircle, BoxLine, BoxPoint,
+    CircleBox, CircleCircle, CircleLine, CirclePoint,
+    LineBox, LineCircle, LineLine, LinePoint,
+    PointBox, PointCircle, PointLine, PointPoint,
     ERectPivots, RECT_PIVOT_OFFSETS_FROM_CENTER, RECT_CORNER_OFFSETS_FROM_CENTER, 
     GetRectCorners, GetRotatedRectCorners, RotatePointAroundPivot,
 )
 
+from .time import Time
+
 __all__ = [
-    "Behaviour",
     "Command", "ToggleCollidersDebug", 
-    "BaseComponent", "Sprite", "Transform",
+    "BaseComponent", "Script", "Sprite", "Transform",
     "BaseCollider", "BoxCollider", "CircleCollider", "LineCollider", "PointCollider",
     "Window",
     "Entity",
     "Event",
     "Input",
-    "BehaviourManager", "SystemManager",
-    "BaseSystem", "CollisionSystem", "RenderSystem",
+    "SystemManager",
+    "BaseSystem", "CollisionSystem", "RenderSystem", "ScriptSystem",
+    "BoxBox", "BoxCircle", "BoxLine", "BoxPoint",
+    "CircleBox", "CircleCircle", "CircleLine", "CirclePoint",
+    "LineBox", "LineCircle", "LineLine", "LinePoint",
+    "PointBox", "PointCircle", "PointLine", "PointPoint",
     "ERectPivots", "RECT_PIVOT_OFFSETS_FROM_CENTER", "RECT_CORNER_OFFSETS_FROM_CENTER", 
-    "GetRectCorners", "GetRotatedRectCorners", "RotatePointAroundPivot"
+    "GetRectCorners", "GetRotatedRectCorners", "RotatePointAroundPivot",
+    "Time",
 ]

@@ -1,10 +1,9 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, Type, TypeVar, Optional
+from typing import TYPE_CHECKING, Type, TypeVar, Optional, cast
 
 if TYPE_CHECKING:
     from pyre.components import BaseComponent
-    from pyre.systems import BaseSystem, RenderSystem, CollisionSystem
-
+    from pyre.systems import BaseSystem, CollisionSystem, RenderSystem, ScriptSystem
 
 T = TypeVar("T", bound="BaseSystem")
 
@@ -23,39 +22,39 @@ class SystemManager:
             return
 
         SystemManager.__instance = self
-        self.renderSys: RenderSystem = None
-        self.collisionSys: CollisionSystem = None
+        self.m_collisionSys: Optional[CollisionSystem] = None
+        self.m_renderSys: Optional[RenderSystem] = None
+        self.m_scriptSys: Optional[ScriptSystem] = None
 
         self.m_componentsToSystems: dict[Type["BaseComponent"], "BaseSystem"] = {}
         self.m_systemsToClasses: dict[Type["BaseSystem"], "BaseSystem"] = {}
 
     def Init(self) -> None:
-        from pyre.components import Sprite
+        from pyre.components import Script, Sprite
         from pyre.components.colliders import BaseCollider
-        from pyre.systems import RenderSystem, CollisionSystem
+        from pyre.systems import CollisionSystem, RenderSystem, ScriptSystem
 
-        self.renderSys = RenderSystem.GetInstance()
-        self.collisionSys = CollisionSystem.GetInstance()
+        self.m_collisionSys = CollisionSystem.GetInstance()
+        self.m_renderSys = RenderSystem.GetInstance()
+        self.m_scriptSys = ScriptSystem.GetInstance()
 
         self.m_componentsToSystems = {
-            Sprite: self.renderSys,
-            BaseCollider: self.collisionSys,
+            Script: self.m_scriptSys,
+            Sprite: self.m_renderSys,
+            BaseCollider: self.m_collisionSys,
         }
 
         self.m_systemsToClasses = {
-            RenderSystem: self.renderSys,
-            CollisionSystem: self.collisionSys,
+            CollisionSystem: self.m_collisionSys,
+            RenderSystem: self.m_renderSys,
+            ScriptSystem: self.m_scriptSys,
         }
 
-    def GetSystemInstanceForComponent(self, comp: "BaseComponent") -> "BaseSystem" | None:
+    def GetSystemInstanceForComponent(self, comp: "BaseComponent") -> Optional[BaseSystem]:
         for compType, system in self.m_componentsToSystems.items():
             if isinstance(comp, compType):
                 return system
         return None
 
     def GetSystemInstance(self, systemType: type[T]) -> Optional[T]:
-        system = self.m_systemsToClasses.get(systemType)
-        if isinstance(system, systemType):
-            return system
-        else:
-            return None
+        return cast(Optional[T], self.m_systemsToClasses.get(systemType))

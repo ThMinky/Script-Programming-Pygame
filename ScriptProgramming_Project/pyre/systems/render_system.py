@@ -43,8 +43,6 @@ class RenderSystem(BaseSystem):
             self._m_to_remove.add(comp)
 
     def Render(self, surface: pygame.Surface) -> None:
-        super().Update()
-
         from pyre.components import Transform
         from pyre.components.colliders import BaseCollider
 
