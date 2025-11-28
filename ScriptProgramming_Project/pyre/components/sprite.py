@@ -14,7 +14,7 @@ class Sprite(BaseComponent):
         super().__init__()
 
         self.m_texture: pygame.Surface = pygame.image.load(texturePath).convert_alpha()
-        self.m_originalTexture: pygame.Surface = self.m_texture.copy()
+        self._m_originalTexture: pygame.Surface = self.m_texture.copy()
         self.m_layer: int = layer
 
         self.m_transform: "Transform" | None = None
@@ -53,7 +53,7 @@ class Sprite(BaseComponent):
         super().Disable()
 
     def UpdateScale(self) -> None:
-        textureSize = pygame.Vector2(self.m_originalTexture.get_size())
+        textureSize = pygame.Vector2(self._m_originalTexture.get_size())
         scaledSize = textureSize.elementwise() * self.m_transform.m_worldScale.elementwise()
 
-        self.m_texture = pygame.transform.smoothscale(self.m_originalTexture, scaledSize)
+        self.m_texture = pygame.transform.smoothscale(self._m_originalTexture, scaledSize)

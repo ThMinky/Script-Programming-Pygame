@@ -21,19 +21,18 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="game\player\player.py" />
-    <Compile Include="game\player\move_commands\__init__.py" />
-    <Compile Include="game\player\__init__.py" />
-    <Compile Include="game\__init__.py" />
+    <Compile Include="project\player\player_script.py" />
+    <Compile Include="project\player\move_commands\__init__.py" />
+    <Compile Include="project\player\__init__.py" />
+    <Compile Include="project\__init__.py" />
     <Compile Include="main.py" />
+    <Compile Include="pyre\commands\toggle_fps_debug.py" />
     <Compile Include="pyre\components\script.py" />
     <Compile Include="pyre\commands\command.py" />
-    <Compile Include="game\player\move_commands\move_backward.py" />
-    <Compile Include="game\player\move_commands\move_forward.py" />
-    <Compile Include="game\player\move_commands\rotate_hull_left.py" />
-    <Compile Include="game\player\move_commands\rotate_hull_right.py" />
-    <Compile Include="game\player\move_commands\rotate_turret_left.py" />
-    <Compile Include="game\player\move_commands\rotate_turret_right.py" />
+    <Compile Include="project\player\move_commands\move_backward.py" />
+    <Compile Include="project\player\move_commands\move_forward.py" />
+    <Compile Include="project\player\move_commands\rotate_left.py" />
+    <Compile Include="project\player\move_commands\rotate_right.py" />
     <Compile Include="pyre\commands\toggle_colliders_debug.py" />
     <Compile Include="pyre\components\colliders\base_collider.py" />
     <Compile Include="pyre\components\colliders\point_collider.py" />
@@ -69,9 +68,9 @@
     <Compile Include="scene.py" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="game\" />
-    <Folder Include="game\player\" />
-    <Folder Include="game\player\move_commands\" />
+    <Folder Include="project\" />
+    <Folder Include="project\player\" />
+    <Folder Include="project\player\move_commands\" />
     <Folder Include="pyre\" />
     <Folder Include="pyre\components\" />
     <Folder Include="pyre\components\colliders\" />

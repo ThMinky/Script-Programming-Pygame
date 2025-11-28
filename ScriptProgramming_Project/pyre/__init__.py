@@ -1,5 +1,5 @@
 from .commands import (
-    Command, ToggleCollidersDebug,
+    Command, ToggleCollidersDebug, ToggleFpsDebug,
 )
 
 from .components import (
@@ -46,7 +46,7 @@ from .utils import (
 from .time import Time
 
 __all__ = [
-    "Command", "ToggleCollidersDebug", 
+    "Command", "ToggleCollidersDebug", "ToggleFpsDebug",
     "BaseComponent", "Script", "Sprite", "Transform",
     "BaseCollider", "BoxCollider", "CircleCollider", "LineCollider", "PointCollider",
     "Window",

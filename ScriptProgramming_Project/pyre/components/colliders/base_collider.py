@@ -27,8 +27,9 @@ class BaseCollider(BaseComponent, ABC):
     def Init(self) -> None:
         super().Init()
 
-        from pyre.components.transform import Transform
+        from pyre.components import Sprite, Transform
 
+        self.m_sprite = self.m_parent.GetComponent(Sprite)
         self.m_transform = self.m_parent.GetComponent(Transform)
 
     def Uninit(self) -> None:

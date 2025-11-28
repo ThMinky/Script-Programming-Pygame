@@ -17,6 +17,9 @@ class LineCollider(BaseCollider):
         self.m_transform.m_onPositionChanged.Add(self.UpdatePosition)
         self.m_transform.m_onPositionChanged.Add(self.UpdateBounds)
 
+        self.UpdatePosition()
+        self.UpdateBounds()
+
     def Uninit(self) -> None:
         self.m_transform.m_onPositionChanged.Remove(self.UpdatePosition)
         self.m_transform.m_onPositionChanged.Remove(self.UpdateBounds)
@@ -35,13 +38,12 @@ class LineCollider(BaseCollider):
     def UpdateBounds(self) -> None:
         if self.m_length is None:
             if self.m_sprite:
-                textureSize = pygame.Vector2(self.m_sprite.m_originalTexture.get_size())
-                self.m_length = textureSize.y
+                self.m_length = self.m_sprite.m_texture.get_size()[1]
             else:
                 self.m_length = 1.0
 
-        self.m_startPoint = self.m_worldPos + (-self.m_transform.GetForwardVec * (self.m_length / 2))
-        self.m_endPoint = self.m_worldPos + (self.m_transform.GetForwardVec * (self.m_length / 2))
+        self.m_startPoint = self.m_worldPos + (-self.m_transform.GetForwardVec() * (self.m_length / 2))
+        self.m_endPoint = self.m_worldPos + (self.m_transform.GetForwardVec() * (self.m_length / 2))
 
     def DrawBounds(self, surface) -> None:
         pygame.draw.line(surface, (255, 0, 0), self.m_startPoint, self.m_endPoint, 1)

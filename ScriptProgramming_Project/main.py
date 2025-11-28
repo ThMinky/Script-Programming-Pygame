@@ -5,6 +5,7 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 import pygame
 
 # Engine
+from pyre.commands import ToggleCollidersDebug, ToggleFpsDebug
 from pyre.display import Window
 from pyre.managers import SystemManager
 from pyre.systems import RenderSystem, ScriptSystem
@@ -40,6 +41,12 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+
+    if Input.GetInstance().GetKeyDown(pygame.K_c):
+        ToggleCollidersDebug().GetInstance().Execute()
+
+    if Input.GetInstance().GetKeyDown(pygame.K_v):
+        ToggleFpsDebug().GetInstance().Execute()
 
     scriptSystem.Update()
 
