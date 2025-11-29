@@ -53,7 +53,7 @@ class RenderSystem(BaseSystem):
             self._SortSprites()
 
         for sprite in self._m_sprites:
-            transform = sprite.m_parent.GetComponent(Transform)
+            transform = sprite.m_parent.GetComponentByType(Transform)
 
             rotatedSprite = pygame.transform.rotate(sprite.m_texture, -transform.m_worldRot)
 
@@ -62,7 +62,7 @@ class RenderSystem(BaseSystem):
             surface.blit(rotatedSprite, rect.topleft)
 
             if self.m_debugColliders:
-                colliders = sprite.m_parent.GetComponents(BaseCollider)
+                colliders = sprite.m_parent.GetComponentsByType(BaseCollider)
                 for collider in colliders:
                     collider.DrawBounds(surface)
 
@@ -81,7 +81,7 @@ class RenderSystem(BaseSystem):
         from pyre.components import Transform
 
         for sprite in self._m_sprites:
-            transform = sprite.m_parent.GetComponent(Transform)
+            transform = sprite.m_parent.GetComponentByType(Transform)
 
             if transform.m_parentTransform is None:
                 self._AssignHierarchyLayer(transform)
@@ -92,7 +92,7 @@ class RenderSystem(BaseSystem):
     def _AssignHierarchyLayer(self, transform: "Transform", baseLayer: int = 0) -> None:
         from pyre.components import Sprite
 
-        sprite = transform.m_parent.GetComponent(Sprite)
+        sprite = transform.m_parent.GetComponentByType(Sprite)
         currentLayer = baseLayer
 
         if sprite:

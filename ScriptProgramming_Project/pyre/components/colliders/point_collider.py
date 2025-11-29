@@ -10,11 +10,18 @@ class PointCollider(BaseCollider):
     def Init(self) -> None:
         super().Init()
 
+        if not self.m_transform:
+            return
+
         self.m_transform.m_onPositionChanged.Add(self.UpdatePosition)
 
         self.UpdatePosition()
 
     def Uninit(self) -> None:
+        if not self.m_transform:
+            super().Uninit()
+            return
+
         self.m_transform.m_onPositionChanged.Remove(self.UpdatePosition)
 
         super().Uninit()

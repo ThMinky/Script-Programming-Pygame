@@ -14,6 +14,9 @@ class LineCollider(BaseCollider):
     def Init(self) -> None:
         super().Init()
 
+        if not self.m_transform:
+            return
+
         self.m_transform.m_onPositionChanged.Add(self.UpdatePosition)
         self.m_transform.m_onPositionChanged.Add(self.UpdateBounds)
 
@@ -21,6 +24,10 @@ class LineCollider(BaseCollider):
         self.UpdateBounds()
 
     def Uninit(self) -> None:
+        if not self.m_transform:
+            super().Uninit()
+            return
+        
         self.m_transform.m_onPositionChanged.Remove(self.UpdatePosition)
         self.m_transform.m_onPositionChanged.Remove(self.UpdateBounds)
 
@@ -36,6 +43,9 @@ class LineCollider(BaseCollider):
         super().UpdatePosition()
 
     def UpdateBounds(self) -> None:
+        if not self.m_transform:
+            return
+        
         if self.m_length is None:
             if self.m_sprite:
                 self.m_length = self.m_sprite.m_texture.get_size()[1]

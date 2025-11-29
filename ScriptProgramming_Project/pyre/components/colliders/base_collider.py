@@ -7,7 +7,7 @@ import pygame
 from pyre.components import BaseComponent
 
 if TYPE_CHECKING:
-    from pyre.components import Transform, Sprite
+    from pyre.components import Sprite, Transform
 
 
 class BaseCollider(BaseComponent, ABC):
@@ -21,16 +21,16 @@ class BaseCollider(BaseComponent, ABC):
         self.m_offset: pygame.Vector2 = offset if offset is not None else pygame.Vector2(0, 0)
 
         self.m_worldPos: pygame.Vector2 = pygame.Vector2(0, 0)
-        self.m_transform: "Transform" | None = None
         self.m_sprite: "Sprite" | None = None
+        self.m_transform: "Transform" | None = None
 
     def Init(self) -> None:
         super().Init()
 
         from pyre.components import Sprite, Transform
 
-        self.m_sprite = self.m_parent.GetComponent(Sprite)
-        self.m_transform = self.m_parent.GetComponent(Transform)
+        self.m_sprite = self.m_parent.GetComponentByType(Sprite)
+        self.m_transform = self.m_parent.GetComponentByType(Transform)
 
     def Uninit(self) -> None:
         self.m_transform = None

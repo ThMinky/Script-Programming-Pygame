@@ -25,11 +25,11 @@ class Sprite(BaseComponent):
         from pyre.components.transform import Transform
         from pyre.components.colliders import BaseCollider
 
-        self.m_transform = self.m_parent.GetComponent(Transform)
+        self.m_transform = self.m_parent.GetComponentByType(Transform)
 
         self.m_transform.m_onScaleChanged.Add(self.UpdateScale)
 
-        for collider in self.m_parent.GetComponents(BaseCollider):
+        for collider in self.m_parent.GetComponentsByType(BaseCollider):
             collider.m_sprite = self
 
         self.UpdateScale()
@@ -39,7 +39,7 @@ class Sprite(BaseComponent):
 
         self.m_transform.m_onScaleChanged.Remove(self.UpdateScale)
 
-        for collider in self.m_parent.GetComponents(BaseCollider):
+        for collider in self.m_parent.GetComponentsByType(BaseCollider):
             collider.m_sprite = None
 
         self.m_transform = None

@@ -55,8 +55,11 @@ class PlayerScript(Script):
         if self.m_input.GetKey(pygame.K_e):
             self.m_cmd_rotTurretRight.Execute(self.m_turrent, Time.deltaTime)
 
+        if self.m_input.GetKey(pygame.K_g):
+            self.Destroy()
+
     def OnEnable(self):
-        pass
+        print("I Am On")
 
     def OnDisable(self):
-        pass
+        print("I Am Off")

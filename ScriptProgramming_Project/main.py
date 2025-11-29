@@ -52,6 +52,6 @@ while running:
 
     window.GetSurface().fill((0, 0, 0))
 
-    RenderSystem.GetInstance().Render(window.GetSurface())
+    renderSystem.Render(window.GetSurface())
 
     pygame.display.flip()

@@ -12,6 +12,9 @@ class BoxCollider(BaseCollider):
     def Init(self) -> None:
         super().Init()
 
+        if not self.m_transform:
+            return
+
         self.m_transform.m_onPositionChanged.Add(self.UpdatePosition)
         self.m_transform.m_onPositionChanged.Add(self.UpdateBounds)
 
@@ -19,6 +22,10 @@ class BoxCollider(BaseCollider):
         self.UpdateBounds()
 
     def Uninit(self) -> None:
+        if not self.m_transform:
+            super().Uninit()
+            return
+
         self.m_transform.m_onPositionChanged.Remove(self.UpdatePosition)
         self.m_transform.m_onPositionChanged.Remove(self.UpdateBounds)
 
@@ -42,6 +49,9 @@ class BoxCollider(BaseCollider):
 
     def DrawBounds(self, surface: pygame.Surface) -> None:
         from pyre.utils.math_utils import ERectPivots, GetRotatedRectCorners
+
+        if not self.m_transform:
+            return
 
         corners = GetRotatedRectCorners(
             self.m_worldPos,

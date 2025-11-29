@@ -14,7 +14,7 @@ class RotateRight(Command):
     def Execute(self, entity: "Entity", dt: float) -> None:
         from pyre.components import Transform
 
-        transform = entity.GetComponent(Transform)
+        transform = entity.GetComponentByType(Transform)
 
         newRot = transform.m_localRot + self.m_rotSpeed * dt
         transform.SetRotation(newRot)

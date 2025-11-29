@@ -3,10 +3,6 @@
   "WorkspaceRootPath": "C:\\Users\\thrac\\source\\repos\\ScriptProgramming_Project\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{067850B2-6B4A-4B2E-94D9-D2043355EE31}|ScriptProgramming_Project\\ScriptProgramming_Project.pyproj|C:\\Users\\thrac\\source\\repos\\ScriptProgramming_Project\\ScriptProgramming_Project\\pyre\\systems\\render_system.py||{8B382828-6202-11D1-8870-0000F87579D2}",
-      "RelativeMoniker": "D:0:0:{067850B2-6B4A-4B2E-94D9-D2043355EE31}|ScriptProgramming_Project\\ScriptProgramming_Project.pyproj|solutionrelative:ScriptProgramming_Project\\pyre\\systems\\render_system.py||{8B382828-6202-11D1-8870-0000F87579D2}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{067850B2-6B4A-4B2E-94D9-D2043355EE31}|ScriptProgramming_Project\\ScriptProgramming_Project.pyproj|C:\\Users\\thrac\\source\\repos\\ScriptProgramming_Project\\ScriptProgramming_Project\\main.py||{8B382828-6202-11D1-8870-0000F87579D2}",
       "RelativeMoniker": "D:0:0:{067850B2-6B4A-4B2E-94D9-D2043355EE31}|ScriptProgramming_Project\\ScriptProgramming_Project.pyproj|solutionrelative:ScriptProgramming_Project\\main.py||{8B382828-6202-11D1-8870-0000F87579D2}"
     }
@@ -23,27 +19,14 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "render_system.py",
-              "DocumentMoniker": "C:\\Users\\thrac\\source\\repos\\ScriptProgramming_Project\\ScriptProgramming_Project\\pyre\\systems\\render_system.py",
-              "RelativeDocumentMoniker": "ScriptProgramming_Project\\pyre\\systems\\render_system.py",
-              "ToolTip": "C:\\Users\\thrac\\source\\repos\\ScriptProgramming_Project\\ScriptProgramming_Project\\pyre\\systems\\render_system.py",
-              "RelativeToolTip": "ScriptProgramming_Project\\pyre\\systems\\render_system.py",
-              "ViewState": "AgIAACcAAAAAAAAAAAAAAEQAAAAbAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002457|",
-              "WhenOpened": "2025-11-28T08:15:13.378Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
               "Title": "main.py",
               "DocumentMoniker": "C:\\Users\\thrac\\source\\repos\\ScriptProgramming_Project\\ScriptProgramming_Project\\main.py",
               "RelativeDocumentMoniker": "ScriptProgramming_Project\\main.py",
               "ToolTip": "C:\\Users\\thrac\\source\\repos\\ScriptProgramming_Project\\ScriptProgramming_Project\\main.py",
               "RelativeToolTip": "ScriptProgramming_Project\\main.py",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAB0AAAAAAAAAAAAgwDYAAAArAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002457|",
-              "WhenOpened": "2025-11-28T07:53:53.657Z",
+              "WhenOpened": "2025-11-29T12:32:07.874Z",
               "EditorCaption": ""
             }
           ]

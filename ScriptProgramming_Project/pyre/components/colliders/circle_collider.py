@@ -12,6 +12,9 @@ class CircleCollider(BaseCollider):
     def Init(self) -> None:
         super().Init()
 
+        if not self.m_transform:
+            return
+
         self.m_transform.m_onPositionChanged.Add(self.UpdatePosition)
         self.m_transform.m_onPositionChanged.Add(self.UpdateBounds)
 
@@ -19,6 +22,10 @@ class CircleCollider(BaseCollider):
         self.UpdateBounds()
 
     def Uninit(self) -> None:
+        if not self.m_transform:
+            super().Uninit()
+            return
+        
         self.m_transform.m_onPositionChanged.Remove(self.UpdatePosition)
         self.m_transform.m_onPositionChanged.Remove(self.UpdateBounds)
 
@@ -40,8 +47,8 @@ class CircleCollider(BaseCollider):
                 self.m_radius = (
                     max(
                         (
-                            textureSize.x * self.m_transform.m_worldScale.x,
-                            textureSize.y * self.m_transform.m_worldScale.y,
+                            textureSize.x,
+                            textureSize.y,
                         )
                     )
                     / 2

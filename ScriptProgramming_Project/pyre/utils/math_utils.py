@@ -1,6 +1,7 @@
 from enum import Enum, auto
 
 import math
+
 import pygame
 
 

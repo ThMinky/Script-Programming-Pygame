@@ -33,6 +33,12 @@ class Entity:
         )
 
     def AddComponent(self, comp: "BaseComponent") -> None:
+        from pyre.components import Transform
+
+        if isinstance(comp, Transform):
+            if self.GetComponentByType(Transform):
+                return
+
         comp.m_parent = self
         comp.Init()
         self.m_comps.append(comp)
@@ -40,25 +46,70 @@ class Entity:
     def RemoveComponent(self, comp: "BaseComponent") -> None:
         from pyre.components import Transform
 
+        if isinstance(comp, Transform):
+            return
+
         if comp in self.m_comps:
-            if not isinstance(comp, Transform):
+            comp.Uninit()
+            self.m_comps.remove(comp)
+
+    def RemoveComponentByType(self, compType: type["BaseComponent"]) -> None:
+        from pyre.components import Transform
+
+        if compType is Transform:
+            return
+
+        for comp in self.m_comps:
+            if isinstance(comp, compType):
                 comp.Uninit()
                 self.m_comps.remove(comp)
+                break
 
-    def GetComponent(self, compType: Type[T]) -> Optional[T]:
+    def RemoveComponentsByType(self, compType: type["BaseComponent"]) -> None:
+        from pyre.components import Transform
+
+        if compType is Transform:
+            return
+
+        temp: list["BaseComponent"] = []
+        for comp in self.m_comps:
+            if isinstance(comp, compType):
+                temp.append(comp)
+
+        for comp in temp:
+            comp.Uninit()
+            self.m_comps.remove(comp)
+
+    def GetComponentByType(self, compType: Type[T]) -> Optional[T]:
         for comp in self.m_comps:
             if isinstance(comp, compType):
                 return comp
         return None
 
-    def GetComponents(self, compType: Type[T]) -> list[T]:
-        temp = []
+    def GetComponentsByType(self, compType: Type[T]) -> list[T]:
+        temp: list["BaseComponent"] = []
         for comp in self.m_comps:
             if isinstance(comp, compType):
                 temp.append(comp)
         return temp
 
-    def Destroy(self):
-        for comp in self.m_comps:
+    def DestroyRecursively(self):
+        from pyre.components import Transform
+
+        transform = self.GetComponentByType(Transform)
+
+        if not transform:
+            self._Destroy()
+            return
+
+        for child in list(transform.m_childrenTransforms):
+            childEntity = child.m_parent
+            childEntity.DestroyRecursively()
+
+        self._Destroy()
+
+    def _Destroy(self):
+        for comp in list(self.m_comps):
             comp.Uninit()
+
         self.m_comps.clear()

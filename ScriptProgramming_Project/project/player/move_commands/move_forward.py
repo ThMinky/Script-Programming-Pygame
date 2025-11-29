@@ -14,7 +14,7 @@ class MoveForward(Command):
     def Execute(self, entity: "Entity", dt: float) -> None:
         from pyre.components import Transform
 
-        transform = entity.GetComponent(Transform)
+        transform = entity.GetComponentByType(Transform)
 
         newPos = transform.m_localPos + (transform.GetForwardVec() * self.m_moveSpeed * dt)
         transform.SetPosition(newPos)
