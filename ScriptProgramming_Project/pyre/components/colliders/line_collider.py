@@ -4,10 +4,16 @@ from pyre.components.colliders import BaseCollider
 
 
 class LineCollider(BaseCollider):
-    def __init__(self, *, offset: pygame.Vector2 | None = None, length: float | None = None) -> None:
+    def __init__(
+        self,
+        *,
+        offset: pygame.Vector2 | None = None,
+        length: float | None = None,
+    ) -> None:
         super().__init__(offset=offset)
 
         self.m_length: float | None = length if length is not None else None
+
         self.m_startPoint: pygame.Vector2 = pygame.Vector2(0, 0)
         self.m_endPoint: pygame.Vector2 = pygame.Vector2(0, 0)
 
@@ -27,7 +33,7 @@ class LineCollider(BaseCollider):
         if not self.m_transform:
             super().Uninit()
             return
-        
+
         self.m_transform.m_onPositionChanged.Remove(self.UpdatePosition)
         self.m_transform.m_onPositionChanged.Remove(self.UpdateBounds)
 
@@ -45,7 +51,7 @@ class LineCollider(BaseCollider):
     def UpdateBounds(self) -> None:
         if not self.m_transform:
             return
-        
+
         if self.m_length is None:
             if self.m_sprite:
                 self.m_length = self.m_sprite.m_texture.get_size()[1]

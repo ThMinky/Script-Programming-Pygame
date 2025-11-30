@@ -4,7 +4,11 @@ from pyre.components.colliders import BaseCollider
 
 
 class PointCollider(BaseCollider):
-    def __init__(self, *, offset: pygame.Vector2 | None = None) -> None:
+    def __init__(
+        self,
+        *,
+        offset: pygame.Vector2 | None = None,
+    ) -> None:
         super().__init__(offset=offset)
 
     def Init(self) -> None:

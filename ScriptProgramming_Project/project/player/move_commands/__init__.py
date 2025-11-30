@@ -4,4 +4,6 @@ from .rotate_left import RotateLeft
 from .rotate_right import RotateRight
 
 
-__all__ = ["MoveBackward", "MoveForward", "RotateLeft", "RotateRight"]
+__all__ = [
+    "MoveBackward", "MoveForward", "RotateLeft", "RotateRight",
+]

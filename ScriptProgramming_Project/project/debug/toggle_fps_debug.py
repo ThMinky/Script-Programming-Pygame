@@ -1,6 +1,6 @@
 import pygame
 
-from pyre.commands.command import Command
+from pyre.command import Command
 
 
 class ToggleFpsDebug(Command):
@@ -17,10 +17,10 @@ class ToggleFpsDebug(Command):
             return
 
         ToggleFpsDebug.__instance = self
-        from pyre.managers.system_manager import SystemManager
+        from pyre.managers import SystemManager
         from pyre.systems import RenderSystem
 
-        self.m_renderSys = SystemManager.GetInstance().GetSystemInstance(RenderSystem)
+        self.m_renderSys = SystemManager.GetInstance().GetSystemInstanceByType(RenderSystem)
 
     def Execute(self) -> None:
         if self.m_renderSys:

@@ -1,20 +1,20 @@
 import pygame
 
 
-class Input:
+class InputManager:
     __instance = None
 
     @staticmethod
-    def GetInstance() -> "Input":
-        if Input.__instance is None:
-            Input()
-        return Input.__instance
+    def GetInstance() -> "InputManager":
+        if InputManager.__instance is None:
+            InputManager()
+        return InputManager.__instance
 
     def __init__(self) -> None:
-        if Input.__instance is not None:
+        if InputManager.__instance is not None:
             return
 
-        Input.__instance = self
+        InputManager.__instance = self
         self._keys_held: dict[int, bool] = {}
         self._keys_pressed: set[int] = set()
         self._keys_released: set[int] = set()

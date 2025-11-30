@@ -21,28 +21,29 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="project\debug\__init__.py" />
     <Compile Include="project\player\player_script.py" />
     <Compile Include="project\player\move_commands\__init__.py" />
     <Compile Include="project\player\__init__.py" />
     <Compile Include="project\__init__.py" />
     <Compile Include="main.py" />
-    <Compile Include="pyre\commands\toggle_fps_debug.py" />
-    <Compile Include="pyre\components\script.py" />
-    <Compile Include="pyre\commands\command.py" />
+    <Compile Include="project\debug\toggle_fps_debug.py" />
+    <Compile Include="pyre\components\scripts\base_script.py" />
+    <Compile Include="pyre\command.py" />
     <Compile Include="project\player\move_commands\move_backward.py" />
     <Compile Include="project\player\move_commands\move_forward.py" />
     <Compile Include="project\player\move_commands\rotate_left.py" />
     <Compile Include="project\player\move_commands\rotate_right.py" />
-    <Compile Include="pyre\commands\toggle_colliders_debug.py" />
+    <Compile Include="project\debug\toggle_colliders_debug.py" />
     <Compile Include="pyre\components\colliders\base_collider.py" />
     <Compile Include="pyre\components\colliders\point_collider.py" />
     <Compile Include="pyre\components\colliders\line_collider.py" />
     <Compile Include="pyre\components\colliders\__init__.py" />
+    <Compile Include="pyre\components\scripts\__init__.py" />
     <Compile Include="pyre\entities\entity.py" />
-    <Compile Include="pyre\commands\__init__.py" />
     <Compile Include="pyre\events\event.py" />
     <Compile Include="pyre\events\__init__.py" />
-    <Compile Include="pyre\inputs\__init__.py" />
+    <Compile Include="pyre\managers\sprite_manager.py" />
     <Compile Include="pyre\systems\script_system.py" />
     <Compile Include="pyre\managers\__init__.py" />
     <Compile Include="pyre\managers\system_manager.py" />
@@ -53,7 +54,7 @@
     <Compile Include="pyre\components\sprite.py" />
     <Compile Include="pyre\components\transform.py" />
     <Compile Include="pyre\components\__init__.py" />
-    <Compile Include="pyre\inputs\input.py" />
+    <Compile Include="pyre\managers\input_manager.py" />
     <Compile Include="pyre\systems\collision_system.py" />
     <Compile Include="pyre\systems\render_system.py" />
     <Compile Include="pyre\systems\base_system.py" />
@@ -61,6 +62,7 @@
     <Compile Include="pyre\time.py" />
     <Compile Include="pyre\utils\collision_utils.py" />
     <Compile Include="pyre\utils\math_utils.py" />
+    <Compile Include="pyre\utils\rect_utils.py" />
     <Compile Include="pyre\utils\__init__.py" />
     <Compile Include="pyre\display\window.py" />
     <Compile Include="pyre\display\__init__.py" />
@@ -69,17 +71,17 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="project\" />
+    <Folder Include="project\debug\" />
     <Folder Include="project\player\" />
     <Folder Include="project\player\move_commands\" />
     <Folder Include="pyre\" />
     <Folder Include="pyre\components\" />
     <Folder Include="pyre\components\colliders\" />
+    <Folder Include="pyre\components\scripts\" />
     <Folder Include="pyre\entities\" />
     <Folder Include="pyre\managers\" />
-    <Folder Include="pyre\commands\" />
     <Folder Include="pyre\events\" />
     <Folder Include="pyre\display\" />
-    <Folder Include="pyre\inputs\" />
     <Folder Include="pyre\utils\" />
     <Folder Include="pyre\systems\" />
   </ItemGroup>

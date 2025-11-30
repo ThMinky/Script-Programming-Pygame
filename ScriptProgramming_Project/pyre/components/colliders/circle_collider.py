@@ -4,7 +4,12 @@ from pyre.components.colliders import BaseCollider
 
 
 class CircleCollider(BaseCollider):
-    def __init__(self, *, offset: pygame.Vector2 | None = None, radius: float | None = None) -> None:
+    def __init__(
+        self,
+        *,
+        offset: pygame.Vector2 | None = None,
+        radius: float | None = None,
+    ) -> None:
         super().__init__(offset=offset)
 
         self.m_radius: float | None = radius if radius is not None else None
@@ -25,7 +30,7 @@ class CircleCollider(BaseCollider):
         if not self.m_transform:
             super().Uninit()
             return
-        
+
         self.m_transform.m_onPositionChanged.Remove(self.UpdatePosition)
         self.m_transform.m_onPositionChanged.Remove(self.UpdateBounds)
 

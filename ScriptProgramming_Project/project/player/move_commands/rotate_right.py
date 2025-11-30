@@ -1,7 +1,7 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 
-from pyre.commands.command import Command
+from pyre.command import Command
 
 if TYPE_CHECKING:
     from pyre.entities import Entity

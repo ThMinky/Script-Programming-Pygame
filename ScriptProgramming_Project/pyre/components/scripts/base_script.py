@@ -1,7 +1,7 @@
 from pyre.components import BaseComponent
 
 
-class Script(BaseComponent):
+class BaseScript(BaseComponent):
     def __init__(self) -> None:
         super().__init__()
 
@@ -16,21 +16,21 @@ class Script(BaseComponent):
     def Update(self) -> None:
         pass
 
-    def Enable(self):
+    def OnEnable(self) -> None:
+        pass
+
+    def OnDisable(self) -> None:
+        pass
+
+    def Enable(self) -> None:
         super().Enable()
 
         self.OnEnable()
 
-    def Disable(self):
+    def Disable(self) -> None:
         self.OnDisable()
 
         super().Disable()
 
-    def OnEnable(self):
-        pass
-
-    def OnDisable(self):
-        pass
-
     def Destroy(self) -> None:
-        self.Uninit()
+        super().Destroy()

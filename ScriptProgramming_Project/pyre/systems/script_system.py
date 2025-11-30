@@ -25,9 +25,9 @@ class ScriptSystem:
         self._m_pending_starts: list[Script] = []
 
     def Register(self, script: "Script") -> None:
-        from pyre.components import Script
+        from pyre.components.scripts import BaseScript
 
-        if isinstance(script, Script):
+        if isinstance(script, BaseScript):
             if script not in self._m_to_add:
                 if script not in self._m_scripts:
                     self._m_to_add.append(script)

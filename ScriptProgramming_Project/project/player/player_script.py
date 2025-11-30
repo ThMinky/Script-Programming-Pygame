@@ -4,8 +4,8 @@ from typing import TYPE_CHECKING
 import pygame
 
 # Engine
-from pyre.components import Script
-from pyre.inputs import Input
+from pyre.components.scripts import BaseScript
+from pyre.managers import InputManager
 from pyre.time import Time
 
 # Project
@@ -15,11 +15,11 @@ if TYPE_CHECKING:
     from pyre.entities import Entity
 
 
-class PlayerScript(Script):
+class PlayerScript(BaseScript):
     def __init__(self) -> None:
         super().__init__()
 
-        self.m_input = Input.GetInstance()
+        self.m_input = InputManager.GetInstance()
 
         self.m_hullMoveSpeed: float = 50.0
         self.m_hullRotSpeed: float = 25.0

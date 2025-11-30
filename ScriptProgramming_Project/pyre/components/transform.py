@@ -62,6 +62,9 @@ class Transform(BaseComponent):
     def Disable(self) -> None:
         pass
 
+    def Destroy(self) -> None:
+        pass
+
     def SetPosition(self, newPos: pygame.Vector2) -> None:
         self.m_localPos = newPos
         self._UpdateWorldPosition()
@@ -74,7 +77,7 @@ class Transform(BaseComponent):
         self.m_localScale = newScale
         self._UpdateWorldScale()
 
-    def _UpdateWorldPosition(self):
+    def _UpdateWorldPosition(self) -> None:
         if self.m_parentTransform:
             self.m_worldPos = (self.m_localPos.elementwise() * self.m_parentTransform.m_worldScale.elementwise()).rotate(
                 self.m_parentTransform.m_worldRot
@@ -87,7 +90,7 @@ class Transform(BaseComponent):
 
         self.m_onPositionChanged.Fire()
 
-    def _UpdateWorldRotation(self):
+    def _UpdateWorldRotation(self) -> None:
         if self.m_parentTransform:
             self.m_worldRot = (self.m_localRot + self.m_parentTransform.m_worldRot) % 360
         else:
@@ -100,7 +103,7 @@ class Transform(BaseComponent):
 
         self.m_onRotationChanged.Fire()
 
-    def _UpdateWorldScale(self):
+    def _UpdateWorldScale(self) -> None:
         if self.m_parentTransform:
             self.m_worldScale = self.m_localScale.elementwise() * self.m_parentTransform.m_worldScale.elementwise()
         else:
@@ -113,7 +116,7 @@ class Transform(BaseComponent):
 
         self.m_onScaleChanged.Fire()
 
-    def _UpdateWorldTransform(self):
+    def _UpdateWorldTransform(self) -> None:
         if self.m_parentTransform:
             self.m_worldPos = (self.m_localPos.elementwise() * self.m_parentTransform.m_worldScale.elementwise()).rotate(
                 self.m_parentTransform.m_worldRot

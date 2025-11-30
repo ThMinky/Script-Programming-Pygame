@@ -5,13 +5,14 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 import pygame
 
 # Engine
-from pyre.commands import ToggleCollidersDebug, ToggleFpsDebug
 from pyre.display import Window
-from pyre.managers import SystemManager
+from pyre.managers import InputManager, SystemManager
 from pyre.systems import RenderSystem, ScriptSystem
-from pyre.inputs import Input
 from pyre.time import Time
 
+
+# Project
+from project.debug import ToggleCollidersDebug, ToggleFpsDebug
 
 # Scene
 from scene import Scene
@@ -26,8 +27,8 @@ clock = pygame.time.Clock()
 systemManager = SystemManager.GetInstance()
 systemManager.Init()
 
-renderSystem = systemManager.GetSystemInstance(RenderSystem)
-scriptSystem = systemManager.GetSystemInstance(ScriptSystem)
+renderSystem = systemManager.GetSystemInstanceByType(RenderSystem)
+scriptSystem = systemManager.GetSystemInstanceByType(ScriptSystem)
 
 currentScene = Scene()
 
@@ -35,23 +36,23 @@ currentScene = Scene()
 
 running = True
 while running:
-    Input.GetInstance().Update()
+    InputManager.GetInstance().Update()
     Time.Update()
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
 
-    if Input.GetInstance().GetKeyDown(pygame.K_c):
+    if InputManager.GetInstance().GetKeyDown(pygame.K_c):
         ToggleCollidersDebug().GetInstance().Execute()
 
-    if Input.GetInstance().GetKeyDown(pygame.K_v):
+    if InputManager.GetInstance().GetKeyDown(pygame.K_v):
         ToggleFpsDebug().GetInstance().Execute()
 
     scriptSystem.Update()
 
-    window.GetSurface().fill((0, 0, 0))
+    window.m_surface.fill((0, 0, 0))
 
-    renderSystem.Render(window.GetSurface())
+    renderSystem.Render(window.m_surface)
 
     pygame.display.flip()

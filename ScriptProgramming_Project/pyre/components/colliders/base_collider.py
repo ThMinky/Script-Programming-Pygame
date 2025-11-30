@@ -45,6 +45,9 @@ class BaseCollider(BaseComponent, ABC):
         super().Disable()
 
     def UpdatePosition(self) -> None:
+        if not self.m_transform:
+            return
+
         self.m_worldPos = self.m_transform.m_worldPos + self.m_offset
 
     @abstractmethod

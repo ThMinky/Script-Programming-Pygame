@@ -13,7 +13,7 @@ class BaseComponent:
     def Init(self) -> None:
         from pyre.managers.system_manager import SystemManager
 
-        system = SystemManager.GetInstance().GetSystemInstanceForComponent(self)
+        system = SystemManager.GetInstance().GetSystemInstanceByComponent(self)
 
         if system:
             system.Register(self)
@@ -21,7 +21,7 @@ class BaseComponent:
     def Uninit(self) -> None:
         from pyre.managers.system_manager import SystemManager
 
-        system = SystemManager.GetInstance().GetSystemInstanceForComponent(self)
+        system = SystemManager.GetInstance().GetSystemInstanceByComponent(self)
 
         if system:
             system.Unregister(self)
@@ -32,7 +32,7 @@ class BaseComponent:
 
         from pyre.managers.system_manager import SystemManager
 
-        system = SystemManager.GetInstance().GetSystemInstanceForComponent(self)
+        system = SystemManager.GetInstance().GetSystemInstanceByComponent(self)
 
         if system:
             system.Register(self)
@@ -45,9 +45,12 @@ class BaseComponent:
 
         from pyre.managers.system_manager import SystemManager
 
-        system = SystemManager.GetInstance().GetSystemInstanceForComponent(self)
+        system = SystemManager.GetInstance().GetSystemInstanceByComponent(self)
 
         if system:
             system.Unregister(self)
 
         self.m_enabled = False
+
+    def Destroy(self) -> None:
+        self.m_parent.RemoveComponent(self)

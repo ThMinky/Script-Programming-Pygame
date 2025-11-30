@@ -10,14 +10,19 @@ if TYPE_CHECKING:
 
 
 class Sprite(BaseComponent):
-    def __init__(self, *, texturePath: str, layer: int = 0) -> None:
+    def __init__(
+        self,
+        *,
+        texturePath: str,
+        layer: int = 0,
+    ) -> None:
         super().__init__()
 
         self.m_texture: pygame.Surface = pygame.image.load(texturePath).convert_alpha()
-        self._m_originalTexture: pygame.Surface = self.m_texture.copy()
         self.m_layer: int = layer
 
         self.m_transform: "Transform" | None = None
+        self._m_originalTexture: pygame.Surface = self.m_texture.copy()
 
     def Init(self) -> None:
         super().Init()
@@ -26,6 +31,9 @@ class Sprite(BaseComponent):
         from pyre.components.colliders import BaseCollider
 
         self.m_transform = self.m_parent.GetComponentByType(Transform)
+
+        if not self.m_transform:
+            return
 
         self.m_transform.m_onScaleChanged.Add(self.UpdateScale)
 
@@ -36,6 +44,9 @@ class Sprite(BaseComponent):
 
     def Uninit(self) -> None:
         from pyre.components.colliders import BaseCollider
+
+        if not self.m_transform:
+            return
 
         self.m_transform.m_onScaleChanged.Remove(self.UpdateScale)
 
@@ -52,7 +63,13 @@ class Sprite(BaseComponent):
     def Disable(self) -> None:
         super().Disable()
 
+    def Destroy(self) -> None:
+        super().Destroy()
+
     def UpdateScale(self) -> None:
+        if not self.m_transform:
+            return
+
         textureSize = pygame.Vector2(self._m_originalTexture.get_size())
         scaledSize = textureSize.elementwise() * self.m_transform.m_worldScale.elementwise()
 

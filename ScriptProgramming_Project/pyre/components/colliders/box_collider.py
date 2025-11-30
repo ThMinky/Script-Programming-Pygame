@@ -4,7 +4,12 @@ from pyre.components.colliders import BaseCollider
 
 
 class BoxCollider(BaseCollider):
-    def __init__(self, *, offset: pygame.Vector2 | None = None, size: pygame.Vector2 | None = None) -> None:
+    def __init__(
+        self,
+        *,
+        offset: pygame.Vector2 | None = None,
+        size: pygame.Vector2 | None = None,
+    ) -> None:
         super().__init__(offset=offset)
 
         self.m_size: pygame.Vector2 | None = size if size is not None else None
@@ -48,7 +53,7 @@ class BoxCollider(BaseCollider):
                 self.m_size = pygame.Vector2(1, 1)
 
     def DrawBounds(self, surface: pygame.Surface) -> None:
-        from pyre.utils.math_utils import ERectPivots, GetRotatedRectCorners
+        from pyre.utils.rect_utils import ERectPivots, GetRotatedRectCorners
 
         if not self.m_transform:
             return
