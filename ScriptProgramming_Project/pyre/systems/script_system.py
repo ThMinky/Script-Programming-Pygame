@@ -8,21 +8,23 @@ if TYPE_CHECKING:
 class ScriptSystem:
     __instance = None
 
+    def __new__(cls) -> "ScriptSystem":
+        if cls.__instance is None:
+            cls.__instance = super().__new__(cls)
+        return cls.__instance
+
+    def __init__(self) -> None:
+        if not hasattr(self, "_m_scripts"):
+            self._m_scripts: list["Script"] = []
+            self._m_to_add: list["Script"] = []
+            self._m_to_remove: list["Script"] = []
+            self._m_pending_starts: list[Script] = []
+
     @staticmethod
     def GetInstance() -> "ScriptSystem":
         if ScriptSystem.__instance is None:
             ScriptSystem()
         return ScriptSystem.__instance
-
-    def __init__(self) -> None:
-        if ScriptSystem.__instance is not None:
-            return
-
-        ScriptSystem.__instance = self
-        self._m_scripts: list["Script"] = []
-        self._m_to_add: list["Script"] = []
-        self._m_to_remove: list["Script"] = []
-        self._m_pending_starts: list[Script] = []
 
     def Register(self, script: "Script") -> None:
         from pyre.components.scripts import BaseScript

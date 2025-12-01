@@ -7,6 +7,19 @@ class BaseScript(BaseComponent):
 
         self.Init()
 
+    def Enable(self) -> None:
+        super().Enable()
+
+        self.OnEnable()
+
+    def Disable(self) -> None:
+        self.OnDisable()
+
+        super().Disable()
+
+    def Destroy(self) -> None:
+        super().Destroy()
+
     def Awake(self) -> None:
         pass
 
@@ -21,16 +34,3 @@ class BaseScript(BaseComponent):
 
     def OnDisable(self) -> None:
         pass
-
-    def Enable(self) -> None:
-        super().Enable()
-
-        self.OnEnable()
-
-    def Disable(self) -> None:
-        self.OnDisable()
-
-        super().Disable()
-
-    def Destroy(self) -> None:
-        super().Destroy()

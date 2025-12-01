@@ -4,20 +4,22 @@ import pygame
 class InputManager:
     __instance = None
 
+    def __new__(cls) -> "InputManager":
+        if cls.__instance is None:
+            cls.__instance = super().__new__(cls)
+        return cls.__instance
+
+    def __init__(self) -> None:
+        if not hasattr(self, "_keys_held"):
+            self._keys_held: dict[int, bool] = {}
+            self._keys_pressed: set[int] = set()
+            self._keys_released: set[int] = set()
+
     @staticmethod
     def GetInstance() -> "InputManager":
         if InputManager.__instance is None:
             InputManager()
         return InputManager.__instance
-
-    def __init__(self) -> None:
-        if InputManager.__instance is not None:
-            return
-
-        InputManager.__instance = self
-        self._keys_held: dict[int, bool] = {}
-        self._keys_pressed: set[int] = set()
-        self._keys_released: set[int] = set()
 
     def Update(self) -> None:
         self._keys_pressed.clear()

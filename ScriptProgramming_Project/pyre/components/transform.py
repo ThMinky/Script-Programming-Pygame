@@ -77,6 +77,14 @@ class Transform(BaseComponent):
         self.m_localScale = newScale
         self._UpdateWorldScale()
 
+    def GetForwardVec(self) -> pygame.Vector2:
+        rad = math.radians(self.m_worldRot - 90)
+        return pygame.Vector2(math.cos(rad), math.sin(rad))
+
+    def GetRightVec(self) -> pygame.Vector2:
+        rad = math.radians(self.m_worldRot)
+        return pygame.Vector2(math.cos(rad), math.sin(rad))
+
     def _UpdateWorldPosition(self) -> None:
         if self.m_parentTransform:
             self.m_worldPos = (self.m_localPos.elementwise() * self.m_parentTransform.m_worldScale.elementwise()).rotate(
@@ -127,11 +135,3 @@ class Transform(BaseComponent):
             self.m_worldPos = self.m_localPos
             self.m_worldRot = self.m_localRot % 360
             self.m_worldScale = self.m_localScale
-
-    def GetForwardVec(self) -> pygame.Vector2:
-        rad = math.radians(self.m_worldRot - 90)
-        return pygame.Vector2(math.cos(rad), math.sin(rad))
-
-    def GetRightVec(self) -> pygame.Vector2:
-        rad = math.radians(self.m_worldRot)
-        return pygame.Vector2(math.cos(rad), math.sin(rad))

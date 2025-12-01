@@ -48,7 +48,7 @@ class BoxCollider(BaseCollider):
     def UpdateBounds(self) -> None:
         if self.m_size is None:
             if self.m_sprite:
-                self.m_size = pygame.Vector2(self.m_sprite.m_texture.get_size())
+                self.m_size = pygame.Vector2(self.m_sprite.m_sprite.get_size())
             else:
                 self.m_size = pygame.Vector2(1, 1)
 

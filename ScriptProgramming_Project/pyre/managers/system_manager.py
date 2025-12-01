@@ -11,23 +11,25 @@ T = TypeVar("T", bound="BaseSystem")
 class SystemManager:
     __instance = None
 
+    def __new__(cls) -> "SystemManager":
+        if cls.__instance is None:
+            cls.__instance = super().__new__(cls)
+        return cls.__instance
+
+    def __init__(self) -> None:
+        if not hasattr(self, "_m_collisionSys"):
+            self._m_collisionSys: "CollisionSystem" | None = None
+            self._m_renderSys: "RenderSystem" | None = None
+            self._m_scriptSys: "ScriptSystem" | None = None
+
+            self._m_componentsToSystems: dict[Type["BaseComponent"], "BaseSystem"] = {}
+            self._m_typesToSystems: dict[Type["BaseSystem"], "BaseSystem"] = {}
+
     @staticmethod
     def GetInstance() -> "SystemManager":
         if SystemManager.__instance is None:
             SystemManager()
         return SystemManager.__instance
-
-    def __init__(self) -> None:
-        if SystemManager.__instance is not None:
-            return
-
-        SystemManager.__instance = self
-        self._m_collisionSys: "CollisionSystem" | None = None
-        self._m_renderSys: "RenderSystem" | None = None
-        self._m_scriptSys: "ScriptSystem" | None = None
-
-        self._m_componentsToSystems: dict[Type["BaseComponent"], "BaseSystem"] = {}
-        self._m_typesToSystems: dict[Type["BaseSystem"], "BaseSystem"] = {}
 
     def Init(self) -> None:
         from pyre.components import Sprite

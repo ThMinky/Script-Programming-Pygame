@@ -54,7 +54,7 @@ class LineCollider(BaseCollider):
 
         if self.m_length is None:
             if self.m_sprite:
-                self.m_length = self.m_sprite.m_texture.get_size()[1]
+                self.m_length = self.m_sprite.m_sprite.get_size()[1]
             else:
                 self.m_length = 1.0
 

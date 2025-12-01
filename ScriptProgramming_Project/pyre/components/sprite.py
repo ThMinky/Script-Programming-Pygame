@@ -13,16 +13,16 @@ class Sprite(BaseComponent):
     def __init__(
         self,
         *,
-        texturePath: str,
+        sprite: pygame.Surface,
         layer: int = 0,
     ) -> None:
         super().__init__()
 
-        self.m_texture: pygame.Surface = pygame.image.load(texturePath).convert_alpha()
+        self.m_sprite: pygame.Surface = sprite
         self.m_layer: int = layer
 
         self.m_transform: "Transform" | None = None
-        self._m_originalTexture: pygame.Surface = self.m_texture.copy()
+        self._m_originalSprite: pygame.Surface = self.m_sprite.copy()
 
     def Init(self) -> None:
         super().Init()
@@ -70,7 +70,7 @@ class Sprite(BaseComponent):
         if not self.m_transform:
             return
 
-        textureSize = pygame.Vector2(self._m_originalTexture.get_size())
+        textureSize = pygame.Vector2(self._m_originalSprite.get_size())
         scaledSize = textureSize.elementwise() * self.m_transform.m_worldScale.elementwise()
 
-        self.m_texture = pygame.transform.smoothscale(self._m_originalTexture, scaledSize)
+        self.m_sprite = pygame.transform.smoothscale(self._m_originalSprite, scaledSize)

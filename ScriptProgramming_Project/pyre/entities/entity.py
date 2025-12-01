@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, Type, TypeVar, Optional
+from typing import TYPE_CHECKING, Type, TypeVar
 
 import pygame
 
@@ -80,7 +80,7 @@ class Entity:
             comp.Uninit()
             self.m_comps.remove(comp)
 
-    def GetComponentByType(self, compType: Type[T]) -> Optional[T]:
+    def GetComponentByType(self, compType: Type[T]) -> T | None:
         for comp in self.m_comps:
             if isinstance(comp, compType):
                 return comp
@@ -93,22 +93,22 @@ class Entity:
                 temp.append(comp)
         return temp
 
-    def DestroyRecursively(self):
+    def Destroy(self):
         from pyre.components import Transform
 
         transform = self.GetComponentByType(Transform)
 
         if not transform:
-            self._Destroy()
+            self._UninitializeComponents()
             return
 
         for child in list(transform.m_childrenTransforms):
             childEntity = child.m_parent
-            childEntity.DestroyRecursively()
+            childEntity.Destroy()
 
-        self._Destroy()
+        self._UninitializeComponents()
 
-    def _Destroy(self):
+    def _UninitializeComponents(self):
         for comp in list(self.m_comps):
             comp.Uninit()
 

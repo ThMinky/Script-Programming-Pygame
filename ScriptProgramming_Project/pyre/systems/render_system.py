@@ -12,23 +12,25 @@ if TYPE_CHECKING:
 class RenderSystem(BaseSystem):
     __instance = None
 
+    def __new__(cls) -> "RenderSystem":
+        if cls.__instance is None:
+            cls.__instance = super().__new__(cls)
+        return cls.__instance
+
+    def __init__(self) -> None:
+        if not hasattr(self, "_m_sprites"):
+            self._m_sprites: list["Sprite"] = []
+            self._m_to_add: set["Sprite"] = set()
+            self._m_to_remove: set["Sprite"] = set()
+            self._m_sorted: bool = False
+            self.m_debugColliders: bool = False
+            self.m_debugFPS: bool = False
+
     @staticmethod
     def GetInstance() -> "RenderSystem":
         if RenderSystem.__instance is None:
             RenderSystem()
         return RenderSystem.__instance
-
-    def __init__(self) -> None:
-        if RenderSystem.__instance is not None:
-            return
-
-        RenderSystem.__instance = self
-        self._m_sprites: list["Sprite"] = []
-        self._m_to_add: set["Sprite"] = set()
-        self._m_to_remove: set["Sprite"] = set()
-        self._m_sorted: bool = False
-        self.m_debugColliders: bool = False
-        self.m_debugFPS: bool = False
 
     def Register(self, comp: "BaseComponent") -> None:
         from pyre.components import Sprite
@@ -55,7 +57,7 @@ class RenderSystem(BaseSystem):
         for sprite in self._m_sprites:
             transform = sprite.m_parent.GetComponentByType(Transform)
 
-            rotatedSprite = pygame.transform.rotate(sprite.m_texture, -transform.m_worldRot)
+            rotatedSprite = pygame.transform.rotate(sprite.m_sprite, -transform.m_worldRot)
 
             rect = rotatedSprite.get_rect(center=transform.m_worldPos)
 
@@ -67,7 +69,9 @@ class RenderSystem(BaseSystem):
                     collider.DrawBounds(surface)
 
         if self.m_debugFPS:
-            self._DrawFPS(surface)
+            from pyre.time import Time
+
+            Time.DrawFPS(surface)
 
     def _FlushChanges(self) -> None:
         self._m_sprites.extend(self._m_to_add)
@@ -104,10 +108,3 @@ class RenderSystem(BaseSystem):
 
         for child in transform.m_childrenTransforms:
             self._AssignHierarchyLayer(child, currentLayer)
-
-    def _DrawFPS(self, surface: pygame.Surface) -> None:
-        from pyre.time import Time
-        
-        font = pygame.font.SysFont(None, 24)
-        fpsText = font.render(f"FPS: {int(1 / Time.deltaTime)}", True, (255, 0, 0))
-        surface.blit(fpsText, (5, 5))

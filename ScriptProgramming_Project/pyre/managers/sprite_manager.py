@@ -20,19 +20,21 @@ class SpriteSheetData:
 class SpriteManager:
     __instance = None
 
+    def __new__(cls) -> "SpriteManager":
+        if cls.__instance is None:
+            cls.__instance = super().__new__(cls)
+        return cls.__instance
+
+    def __init__(self) -> None:
+        if not hasattr(self, "_m_sprites"):
+            self._m_sprites: dict[str, SpriteData] = {}
+            self._m_spriteSheets: dict[str, SpriteSheetData] = {}
+
     @staticmethod
     def GetInstance() -> "SpriteManager":
         if SpriteManager.__instance is None:
             SpriteManager()
         return SpriteManager.__instance
-
-    def __init__(self) -> None:
-        if SpriteManager.__instance is not None:
-            return
-
-        SpriteManager.__instance = self
-        self._m_sprites: dict[str, SpriteData] = {}
-        self._m_spriteSheets: dict[str, SpriteSheetData] = {}
 
     # //////////////////////////////////////////////////
     # Sprite
@@ -41,7 +43,7 @@ class SpriteManager:
             return
 
         surface = None
-        for existingKey, spriteData in self._m_sprites.items():
+        for _, spriteData in self._m_sprites.items():
             if spriteData.path == path:
                 surface = spriteData.surface
                 break
@@ -75,16 +77,19 @@ class SpriteManager:
 
         surfaces = []
         sheetRowsCols = ()
-        for existingKey, spriteSheetData in self._m_spriteSheets.items():
+        for _, spriteSheetData in self._m_spriteSheets.items():
             if spriteSheetData.path == path:
                 surfaces = spriteSheetData.surfaces
                 sheetRowsCols = spriteSheetData.sheetRowsCols
                 break
 
         if not surfaces:
+            if surface.get_width() % spriteSize[0] != 0 or surface.get_height() % spriteSize[1] != 0:
+                raise ValueError("Sprite size does not evenly divide the sheet")
+            
             surface = pygame.image.load(path).convert_alpha()
             rows = surface.get_height() // spriteSize[1]
-            cols = surface.get_width()  // spriteSize[0]
+            cols = surface.get_width() // spriteSize[0]
 
             for row in range(rows):
                 for col in range(cols):

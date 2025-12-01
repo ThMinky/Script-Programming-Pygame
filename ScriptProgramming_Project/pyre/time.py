@@ -1,5 +1,7 @@
 import time
 
+import pygame
+
 
 class Time:
     deltaTime: float = 0.0
@@ -21,3 +23,9 @@ class Time:
         if Time.deltaTime > 0:
             return 1.0 / Time.deltaTime
         return 0.0
+
+    @staticmethod
+    def DrawFPS(surface: pygame.Surface) -> None:
+        font = pygame.font.SysFont(None, 24)
+        fpsText = font.render(f"FPS: {int(1 / Time.deltaTime)}", True, (255, 0, 0))
+        surface.blit(fpsText, (5, 5))
