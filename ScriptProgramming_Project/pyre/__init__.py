@@ -37,7 +37,7 @@ from .utils import (
     PointBox, PointCircle, PointLine, PointPoint,
     RotatePointAroundPivot,
     ERectPivots, RECT_PIVOT_OFFSETS_FROM_CENTER, RECT_CORNER_OFFSETS_FROM_CENTER, 
-    GetRectCorners, GetRotatedRectCorners,
+    GetRectCornersWorldPos, GetRotatedRectCornersWorldPos,
 )
 
 from .command import Command
@@ -60,7 +60,7 @@ __all__ = [
     "PointBox", "PointCircle", "PointLine", "PointPoint",
     "RotatePointAroundPivot",
     "ERectPivots", "RECT_PIVOT_OFFSETS_FROM_CENTER", "RECT_CORNER_OFFSETS_FROM_CENTER", 
-    "GetRectCorners", "GetRotatedRectCorners",  
+    "GetRectCornersWorldPos", "GetRotatedRectCornersWorldPos",  
     "Command",
     "Time",
 ]

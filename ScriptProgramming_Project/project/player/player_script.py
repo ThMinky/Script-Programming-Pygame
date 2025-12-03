@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING
 import pygame
 
 # Engine
+from pyre.components.transform import Transform
 from pyre.components.scripts import BaseScript
 from pyre.managers import InputManager
 from pyre.time import Time
@@ -21,9 +22,9 @@ class PlayerScript(BaseScript):
 
         self.m_input = InputManager.GetInstance()
 
-        self.m_hullMoveSpeed: float = 50.0
-        self.m_hullRotSpeed: float = 25.0
-        self.m_turretRotSpeed: float = 15.0
+        self.m_hullMoveSpeed: float = 75.0
+        self.m_hullRotSpeed: float = 50.0
+        self.m_turretRotSpeed: float = 35.0
 
         self.m_turrent = None
 
@@ -41,25 +42,28 @@ class PlayerScript(BaseScript):
         pass
 
     def Update(self) -> None:
+        moving = False
 
         if self.m_input.GetKey(pygame.K_w):
             self.m_cmd_moveForward.Execute(self.m_parent, Time.deltaTime)
-        if self.m_input.GetKey(pygame.K_a):
-            self.m_cmd_rotHullLeft.Execute(self.m_parent, Time.deltaTime)
+            moving = True
         if self.m_input.GetKey(pygame.K_s):
             self.m_cmd_moveBackward.Execute(self.m_parent, Time.deltaTime)
-        if self.m_input.GetKey(pygame.K_d):
-            self.m_cmd_rotHullRight.Execute(self.m_parent, Time.deltaTime)
+            moving = True
+
+        if moving:
+            if self.m_input.GetKey(pygame.K_a):
+                self.m_cmd_rotHullLeft.Execute(self.m_parent, Time.deltaTime)
+            if self.m_input.GetKey(pygame.K_d):
+                self.m_cmd_rotHullRight.Execute(self.m_parent, Time.deltaTime)
+
         if self.m_input.GetKey(pygame.K_q):
             self.m_cmd_rotTurretLeft.Execute(self.m_turrent, Time.deltaTime)
         if self.m_input.GetKey(pygame.K_e):
             self.m_cmd_rotTurretRight.Execute(self.m_turrent, Time.deltaTime)
 
-        if self.m_input.GetKey(pygame.K_g):
-            self.Destroy()
-
     def OnEnable(self):
-        print("I Am On")
+        pass
 
     def OnDisable(self):
-        print("I Am Off")
+        pass

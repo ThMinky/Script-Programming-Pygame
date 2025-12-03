@@ -37,7 +37,7 @@ RECT_CORNER_OFFSETS_FROM_CENTER: list[pygame.Vector2] = [
 ]
 
 
-def GetRectCorners(worldPos: pygame.Vector2, size: pygame.Vector2) -> list[pygame.Vector2]:
+def GetRectCornersWorldPos(worldPos: pygame.Vector2, size: pygame.Vector2) -> list[pygame.Vector2]:
     corners = []
     for offset in RECT_CORNER_OFFSETS_FROM_CENTER:
         corner = worldPos + (size.elementwise() * offset.elementwise())
@@ -46,7 +46,9 @@ def GetRectCorners(worldPos: pygame.Vector2, size: pygame.Vector2) -> list[pygam
     return corners
 
 
-def GetRotatedRectCorners(worldPos: pygame.Vector2, size: pygame.Vector2, angleDeg: float, pivotType: ERectPivots) -> list[pygame.Vector2]:
+def GetRotatedRectCornersWorldPos(
+    worldPos: pygame.Vector2, size: pygame.Vector2, angleDeg: float, pivotPosition: ERectPivots
+) -> list[pygame.Vector2]:
     from pyre.utils.math_utils import RotatePointAroundPivot
 
     corners = []
@@ -54,7 +56,7 @@ def GetRotatedRectCorners(worldPos: pygame.Vector2, size: pygame.Vector2, angleD
         corner = worldPos + (size.elementwise() * offset.elementwise())
         corners.append(corner)
 
-    pivot = worldPos + (size.elementwise() * RECT_PIVOT_OFFSETS_FROM_CENTER[pivotType].elementwise())
+    pivot = worldPos + (size.elementwise() * RECT_PIVOT_OFFSETS_FROM_CENTER[pivotPosition].elementwise())
 
     rotatedCorners = []
     for corner in corners:

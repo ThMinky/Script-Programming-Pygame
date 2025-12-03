@@ -48,7 +48,7 @@ class BaseCollider(BaseComponent, ABC):
         if not self.m_transform:
             return
 
-        self.m_worldPos = self.m_transform.m_worldPos + self.m_offset
+        self.m_worldPos = self.m_transform.m_worldPos + self.m_offset.rotate(self.m_transform.m_worldRot)
 
     @abstractmethod
     def UpdateBounds(self) -> None:

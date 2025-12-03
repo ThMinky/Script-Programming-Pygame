@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import pygame
@@ -13,16 +13,16 @@ class Sprite(BaseComponent):
     def __init__(
         self,
         *,
-        sprite: pygame.Surface,
+        surface: pygame.Surface,
         layer: int = 0,
     ) -> None:
         super().__init__()
 
-        self.m_sprite: pygame.Surface = sprite
+        self.m_surface: pygame.Surface = surface
         self.m_layer: int = layer
 
         self.m_transform: "Transform" | None = None
-        self._m_originalSprite: pygame.Surface = self.m_sprite.copy()
+        self._m_originalSprite: pygame.Surface = self.m_surface.copy()
 
     def Init(self) -> None:
         super().Init()
@@ -73,4 +73,4 @@ class Sprite(BaseComponent):
         textureSize = pygame.Vector2(self._m_originalSprite.get_size())
         scaledSize = textureSize.elementwise() * self.m_transform.m_worldScale.elementwise()
 
-        self.m_sprite = pygame.transform.smoothscale(self._m_originalSprite, scaledSize)
+        self.m_surface = pygame.transform.smoothscale(self._m_originalSprite, scaledSize)

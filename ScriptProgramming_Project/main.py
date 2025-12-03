@@ -20,7 +20,7 @@ from scene import Scene
 # ///////////////////////////////////////////////////////////////////////////
 # Init
 pygame.init()
-window = Window(1280, 720, "BlastField")
+window = Window(1280, 768, "BlastField")
 window.Init()
 clock = pygame.time.Clock()
 

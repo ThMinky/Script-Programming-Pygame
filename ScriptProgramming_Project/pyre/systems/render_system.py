@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import pygame
@@ -57,7 +57,7 @@ class RenderSystem(BaseSystem):
         for sprite in self._m_sprites:
             transform = sprite.m_parent.GetComponentByType(Transform)
 
-            rotatedSprite = pygame.transform.rotate(sprite.m_sprite, -transform.m_worldRot)
+            rotatedSprite = pygame.transform.rotate(sprite.m_surface, -transform.m_worldRot)
 
             rect = rotatedSprite.get_rect(center=transform.m_worldPos)
 

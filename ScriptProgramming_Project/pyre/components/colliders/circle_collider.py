@@ -48,7 +48,7 @@ class CircleCollider(BaseCollider):
     def UpdateBounds(self) -> None:
         if self.m_radius is None:
             if self.m_sprite:
-                textureSize = pygame.Vector2(self.m_sprite.m_sprite.get_size())
+                textureSize = pygame.Vector2(self.m_sprite.m_surface.get_size())
                 self.m_radius = (
                     max(
                         (

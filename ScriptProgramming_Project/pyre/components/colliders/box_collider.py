@@ -48,17 +48,17 @@ class BoxCollider(BaseCollider):
     def UpdateBounds(self) -> None:
         if self.m_size is None:
             if self.m_sprite:
-                self.m_size = pygame.Vector2(self.m_sprite.m_sprite.get_size())
+                self.m_size = pygame.Vector2(self.m_sprite.m_surface.get_size())
             else:
                 self.m_size = pygame.Vector2(1, 1)
 
     def DrawBounds(self, surface: pygame.Surface) -> None:
-        from pyre.utils.rect_utils import ERectPivots, GetRotatedRectCorners
+        from pyre.utils.rect_utils import ERectPivots, GetRotatedRectCornersWorldPos
 
         if not self.m_transform:
             return
 
-        corners = GetRotatedRectCorners(
+        corners = GetRotatedRectCornersWorldPos(
             self.m_worldPos,
             self.m_size,
             self.m_transform.m_worldRot,

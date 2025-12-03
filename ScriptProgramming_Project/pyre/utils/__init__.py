@@ -11,7 +11,7 @@ from .math_utils import (
 
 from .rect_utils import (
     ERectPivots, RECT_PIVOT_OFFSETS_FROM_CENTER, 
-    RECT_CORNER_OFFSETS_FROM_CENTER, GetRectCorners, GetRotatedRectCorners,
+    RECT_CORNER_OFFSETS_FROM_CENTER, GetRectCornersWorldPos, GetRotatedRectCornersWorldPos,
 )
 
 
@@ -22,5 +22,5 @@ __all__ = [
     "PointBox", "PointCircle", "PointLine", "PointPoint",
     "RotatePointAroundPivot",
     "ERectPivots", "RECT_PIVOT_OFFSETS_FROM_CENTER", "RECT_CORNER_OFFSETS_FROM_CENTER", 
-    "GetRectCorners", "GetRotatedRectCorners", 
+    "GetRectCornersWorldPos", "GetRotatedRectCornersWorldPos", 
 ]
