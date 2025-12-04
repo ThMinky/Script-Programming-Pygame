@@ -63,10 +63,11 @@ class RenderSystem(BaseSystem):
 
             surface.blit(rotatedSprite, rect.topleft)
 
-            if self.m_debugColliders:
-                colliders = sprite.m_parent.GetComponentsByType(BaseCollider)
-                for collider in colliders:
-                    collider.DrawBounds(surface)
+        if self.m_debugColliders:
+            from pyre.systems.collision_system import CollisionSystem
+
+            for collider in CollisionSystem.GetInstance().m_colliders:
+                collider.DrawBounds(surface)
 
         if self.m_debugFPS:
             from pyre.time import Time
@@ -82,29 +83,44 @@ class RenderSystem(BaseSystem):
                 self._m_sprites.remove(sprite)
 
     def _SortSprites(self) -> None:
-        from pyre.components import Transform
+        visitedRoots: set["Transform"] = set()
 
         for sprite in self._m_sprites:
-            transform = sprite.m_parent.GetComponentByType(Transform)
+            rootTransform = self._GetTopMostTransform(sprite)
 
-            if transform.m_parentTransform is None:
-                self._AssignHierarchyLayer(transform)
+            if rootTransform in visitedRoots:
+                continue
+            visitedRoots.add(rootTransform)
+
+            self._AssignHierarchyLayer(rootTransform)
 
         self._m_sprites.sort(key=lambda s: s.m_layer)
         self._m_sorted = True
+
+    def _GetTopMostTransform(self, sprite: "Sprite") -> "Transform":
+        from pyre.components import Transform
+
+        transform = sprite.m_parent.GetComponentByType(Transform)
+
+        if transform:
+            while transform.m_parentTransform is not None:
+                transform = transform.m_parentTransform
+            return transform
 
     def _AssignHierarchyLayer(self, transform: "Transform", baseLayer: int = 0) -> None:
         from pyre.components import Sprite
 
         sprite = transform.m_parent.GetComponentByType(Sprite)
-        currentLayer = baseLayer
 
         if sprite:
-            if sprite.m_layer == 0:
-                sprite.m_layer = baseLayer + 1
-                currentLayer = baseLayer + 1
+            if transform.m_parentTransform:
+                if sprite.m_layer == 0:
+                    sprite.m_layer = baseLayer + 1
+                    baseLayer += 1
+                else:
+                    baseLayer = sprite.m_layer + 1
             else:
-                currentLayer = sprite.m_layer + 1
+                baseLayer = sprite.m_layer + 1
 
         for child in transform.m_childrenTransforms:
-            self._AssignHierarchyLayer(child, currentLayer)
+            self._AssignHierarchyLayer(child, baseLayer)

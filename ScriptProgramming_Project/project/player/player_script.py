@@ -62,6 +62,8 @@ class PlayerScript(BaseScript):
         if self.m_input.GetKey(pygame.K_e):
             self.m_cmd_rotTurretRight.Execute(self.m_turrent, Time.deltaTime)
 
+        print(self.m_parent.GetComponentByType(Transform).m_worldPos, end="\r", flush=True)
+
     def OnEnable(self):
         pass
 

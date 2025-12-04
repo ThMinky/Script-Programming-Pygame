@@ -36,8 +36,9 @@ currentScene = Scene()
 
 running = True
 while running:
-    InputManager.GetInstance().Update()
     Time.Update()
+    
+    InputManager.GetInstance().Update()
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
