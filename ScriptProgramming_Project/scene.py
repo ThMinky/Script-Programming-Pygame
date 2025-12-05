@@ -278,8 +278,8 @@ class Scene:
 
         turret = Entity(
             parentTransform=hull.GetComponentByType(Transform),
-            localPos=pygame.Vector2(0, 0),
-            localRot=0,
+            localPos=pygame.Vector2(0, 5),
+            localRot=180
         )
         turret.AddComponent(Sprite(surface=self.spriteMng.GetSprite("darkTankTurret")))
 

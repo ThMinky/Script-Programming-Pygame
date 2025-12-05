@@ -42,8 +42,8 @@ class Sprite(BaseComponent):
         for collider in self.m_parent.GetComponentsByType(BaseCollider):
             collider.m_sprite = self
 
-        self.UpdateRotation()
         self.UpdateScale()
+        self.UpdateRotation()
 
     def Uninit(self) -> None:
         from pyre.components.colliders import BaseCollider
