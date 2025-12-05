@@ -172,7 +172,7 @@ class Scene:
 
         # Root
         baseRoot = Entity(localPos=center)
-        baseRoot.AddComponent(BoxCollider(size=pygame.Vector2(150, 150)))
+        baseRoot.AddComponent(BoxCollider(size=pygame.Vector2(130, 130)))
         self.m_baseRoot = baseRoot
         baseEntities.append(baseRoot)
 

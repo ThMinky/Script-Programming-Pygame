@@ -22,7 +22,8 @@ class Sprite(BaseComponent):
         self.m_layer: int = layer
 
         self.m_transform: "Transform" | None = None
-        self._m_originalSprite: pygame.Surface = self.m_surface.copy()
+        self._m_scaledSurface: pygame.Surface = self.m_surface.copy()
+        self._m_originalSurface: pygame.Surface = self.m_surface.copy()
 
     def Init(self) -> None:
         super().Init()
@@ -35,11 +36,13 @@ class Sprite(BaseComponent):
         if not self.m_transform:
             return
 
+        self.m_transform.m_onRotationChanged.Add(self.UpdateRotation)
         self.m_transform.m_onScaleChanged.Add(self.UpdateScale)
 
         for collider in self.m_parent.GetComponentsByType(BaseCollider):
             collider.m_sprite = self
 
+        self.UpdateRotation()
         self.UpdateScale()
 
     def Uninit(self) -> None:
@@ -48,6 +51,7 @@ class Sprite(BaseComponent):
         if not self.m_transform:
             return
 
+        self.m_transform.m_onRotationChanged.Remove(self.UpdateRotation)
         self.m_transform.m_onScaleChanged.Remove(self.UpdateScale)
 
         for collider in self.m_parent.GetComponentsByType(BaseCollider):
@@ -66,11 +70,18 @@ class Sprite(BaseComponent):
     def Destroy(self) -> None:
         super().Destroy()
 
+    def UpdateRotation(self) -> None:
+        if not self.m_transform:
+            return
+
+        self.m_surface = pygame.transform.rotate(self._m_scaledSurface, -self.m_transform.m_worldRot)
+
     def UpdateScale(self) -> None:
         if not self.m_transform:
             return
 
-        textureSize = pygame.Vector2(self._m_originalSprite.get_size())
-        scaledSize = textureSize.elementwise() * self.m_transform.m_worldScale.elementwise()
+        surfaceSize = pygame.Vector2(self._m_originalSurface.get_size())
+        scaledSize = surfaceSize.elementwise() * self.m_transform.m_worldScale.elementwise()
 
-        self.m_surface = pygame.transform.smoothscale(self._m_originalSprite, scaledSize)
+        self._m_scaledSurface = pygame.transform.scale(self._m_originalSurface, scaledSize)
+        self.m_surface = self._m_scaledSurface

@@ -1,4 +1,5 @@
 ﻿from __future__ import annotations
+from calendar import c
 from typing import TYPE_CHECKING
 
 import pygame
@@ -19,7 +20,7 @@ class RenderSystem(BaseSystem):
 
     def __init__(self) -> None:
         if not hasattr(self, "_m_sprites"):
-            self._m_sprites: list["Sprite"] = []
+            self.m_sprites: list["Sprite"] = []
             self._m_to_add: set["Sprite"] = set()
             self._m_to_remove: set["Sprite"] = set()
             self._m_sorted: bool = False
@@ -47,21 +48,21 @@ class RenderSystem(BaseSystem):
 
     def Render(self, surface: pygame.Surface) -> None:
         from pyre.components import Transform
-        from pyre.components.colliders import BaseCollider
-
+         
         self._FlushChanges()
 
         if not self._m_sorted:
             self._SortSprites()
 
-        for sprite in self._m_sprites:
+        for sprite in self.m_sprites:
             transform = sprite.m_parent.GetComponentByType(Transform)
 
-            rotatedSprite = pygame.transform.rotate(sprite.m_surface, -transform.m_worldRot)
+            if not transform:
+                continue
 
-            rect = rotatedSprite.get_rect(center=transform.m_worldPos)
+            rect = sprite.m_surface.get_rect(center=transform.m_worldPos)
 
-            surface.blit(rotatedSprite, rect.topleft)
+            surface.blit(sprite.m_surface, rect.topleft)
 
         if self.m_debugColliders:
             from pyre.systems.collision_system import CollisionSystem
@@ -75,17 +76,17 @@ class RenderSystem(BaseSystem):
             Time.DrawFPS(surface)
 
     def _FlushChanges(self) -> None:
-        self._m_sprites.extend(self._m_to_add)
+        self.m_sprites.extend(self._m_to_add)
         self._m_to_add.clear()
 
         for sprite in self._m_to_remove:
-            if sprite in self._m_sprites:
-                self._m_sprites.remove(sprite)
+            if sprite in self.m_sprites:
+                self.m_sprites.remove(sprite)
 
     def _SortSprites(self) -> None:
         visitedRoots: set["Transform"] = set()
 
-        for sprite in self._m_sprites:
+        for sprite in self.m_sprites:
             rootTransform = self._GetTopMostTransform(sprite)
 
             if rootTransform in visitedRoots:
@@ -94,7 +95,7 @@ class RenderSystem(BaseSystem):
 
             self._AssignHierarchyLayer(rootTransform)
 
-        self._m_sprites.sort(key=lambda s: s.m_layer)
+        self.m_sprites.sort(key=lambda s: s.m_layer)
         self._m_sorted = True
 
     def _GetTopMostTransform(self, sprite: "Sprite") -> "Transform":
