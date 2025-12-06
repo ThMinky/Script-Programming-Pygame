@@ -4,8 +4,9 @@ from typing import TYPE_CHECKING
 import pygame
 
 # Engine
-from pyre.components.transform import Transform
+from pyre.components import Transform
 from pyre.components.scripts import BaseScript
+from pyre.components.colliders import BoxCollider, CircleCollider, LineCollider, PointCollider
 from pyre.managers import InputManager
 from pyre.time import Time
 
@@ -24,16 +25,16 @@ class PlayerScript(BaseScript):
 
         self.m_hullMoveSpeed: float = 75.0
         self.m_hullRotSpeed: float = 50.0
-        self.m_turretRotSpeed: float = 35.0
+        self.m_barrelRotSpeed: float = 35.0
 
-        self.m_turrent = None
+        self.m_barrel = None
 
         self.m_cmd_moveForward = MoveForward(self.m_hullMoveSpeed)
         self.m_cmd_rotHullLeft = RotateLeft(self.m_hullRotSpeed)
         self.m_cmd_moveBackward = MoveBackward(self.m_hullMoveSpeed)
         self.m_cmd_rotHullRight = RotateRight(self.m_hullRotSpeed)
-        self.m_cmd_rotTurretLeft = RotateLeft(self.m_turretRotSpeed)
-        self.m_cmd_rotTurretRight = RotateRight(self.m_turretRotSpeed)
+        self.m_cmd_rotTurretLeft = RotateLeft(self.m_barrelRotSpeed)
+        self.m_cmd_rotTurretRight = RotateRight(self.m_barrelRotSpeed)
 
     def Awake(self):
         pass
@@ -58,11 +59,11 @@ class PlayerScript(BaseScript):
                 self.m_cmd_rotHullRight.Execute(self.m_parent, Time.deltaTime)
 
         if self.m_input.GetKey(pygame.K_q):
-            self.m_cmd_rotTurretLeft.Execute(self.m_turrent, Time.deltaTime)
+            self.m_cmd_rotTurretLeft.Execute(self.m_barrel, Time.deltaTime)
         if self.m_input.GetKey(pygame.K_e):
-            self.m_cmd_rotTurretRight.Execute(self.m_turrent, Time.deltaTime)
+            self.m_cmd_rotTurretRight.Execute(self.m_barrel, Time.deltaTime)
 
-        print(self.m_parent.GetComponentByType(Transform).m_worldPos, end="\r", flush=True)
+        # print(self.m_parent.GetComponentByType(Transform).m_worldPos, end="\r", flush=True)
 
     def OnEnable(self):
         pass

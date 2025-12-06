@@ -10,8 +10,7 @@ from .math_utils import (
 )
 
 from .rect_utils import (
-    ERectPivots, RECT_PIVOT_OFFSETS_FROM_CENTER, 
-    RECT_CORNER_OFFSETS_FROM_CENTER, GetRectCornersWorldPos, GetRotatedRectCornersWorldPos,
+    RECT_CORNER_OFFSETS_FROM_CENTER, GetRotatedRectVerticesWorldPos, GetNormalizedRectNormals,
 )
 
 
@@ -21,6 +20,5 @@ __all__ = [
     "LineBox", "LineCircle", "LineLine", "LinePoint",
     "PointBox", "PointCircle", "PointLine", "PointPoint",
     "RotatePointAroundPivot",
-    "ERectPivots", "RECT_PIVOT_OFFSETS_FROM_CENTER", "RECT_CORNER_OFFSETS_FROM_CENTER", 
-    "GetRectCornersWorldPos", "GetRotatedRectCornersWorldPos", 
+    "RECT_CORNER_OFFSETS_FROM_CENTER", "GetRotatedRectVerticesWorldPos", "GetNormalizedRectNormals",
 ]

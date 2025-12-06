@@ -12,4 +12,7 @@ def RotatePointAroundPivot(point: pygame.Vector2, pivot: pygame.Vector2, angleDe
     xRot = xTranslate * math.cos(rad) - yTranslate * math.sin(rad)
     yRot = xTranslate * math.sin(rad) + yTranslate * math.cos(rad)
 
-    return pygame.Vector2(xRot + pivot.x, yRot + pivot.y)
+    xInvTranslate = xRot + pivot.x
+    yInvTranslate = yRot + pivot.y
+
+    return pygame.Vector2(xInvTranslate, yInvTranslate)

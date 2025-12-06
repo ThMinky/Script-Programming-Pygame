@@ -57,3 +57,13 @@ class BaseCollider(BaseComponent, ABC):
     @abstractmethod
     def DrawBounds(self, surface: pygame.Surface) -> None:
         pass
+
+    def GetCollision(self) -> "BaseCollider" | None:
+        from pyre.systems import CollisionSystem
+
+        return CollisionSystem.GetInstance().DetectCollision(self)
+
+    def GetCollisions(self) -> list["BaseCollider"]:
+        from pyre.systems import CollisionSystem
+
+        return CollisionSystem.GetInstance().DetectCollisions(self)

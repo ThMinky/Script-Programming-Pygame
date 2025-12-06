@@ -55,9 +55,17 @@ class Scene:
         self.spriteMng.RegisterSprite("11", "resources/tiles/road_split_r.png")
         self.spriteMng.RegisterSprite("12", "resources/tiles/road_split_d.png")
 
-        # Tank Hulls / Turrets
+        # Tank Hulls / Barrels
+        # Player
+        self.spriteMng.RegisterSprite("sandTankHull", "resources/tanks/tank_hull_sand.png")
+        self.spriteMng.RegisterSprite("sandTankBarrel", "resources/tanks/tank_barrel_sand.png")
+
+        # Basic Enemy
         self.spriteMng.RegisterSprite("darkTankHull", "resources/tanks/tank_hull_dark.png")
-        self.spriteMng.RegisterSprite("darkTankTurret", "resources/tanks/tank_turret_dark.png")
+        self.spriteMng.RegisterSprite("darkTankBarrel", "resources/tanks/tank_barrel_dark.png")
+
+        # Elite Enemy
+        self.spriteMng.RegisterSprite("hellspot", "resources/tanks/tank_elite_hellspot.png")
 
         # Auto Turret Stand / Head
         self.spriteMng.RegisterSprite("autoTurretHead", "resources/autoTurret/auto_turret_head.png")
@@ -269,21 +277,21 @@ class Scene:
         hull = Entity(localPos=pos)
         hull.AddComponent(
             Sprite(
-                surface=self.spriteMng.GetSprite("darkTankHull"),
+                surface=self.spriteMng.GetSprite("sandTankHull"),
                 layer=ELayers.ENTITY,
             )
         )
         hull.AddComponent(BoxCollider())
         hull.AddComponent(PlayerScript())
 
-        turret = Entity(
+        barrel = Entity(
             parentTransform=hull.GetComponentByType(Transform),
             localPos=pygame.Vector2(0, 5),
-            localRot=180
+            localRot=180,
         )
-        turret.AddComponent(Sprite(surface=self.spriteMng.GetSprite("darkTankTurret")))
+        barrel.AddComponent(Sprite(surface=self.spriteMng.GetSprite("sandTankBarrel")))
 
-        hull.GetComponentByType(PlayerScript).m_turrent = turret
+        hull.GetComponentByType(PlayerScript).m_barrel = barrel
 
         return hull
 

@@ -53,16 +53,15 @@ class BoxCollider(BaseCollider):
                 self.m_size = pygame.Vector2(1, 1)
 
     def DrawBounds(self, surface: pygame.Surface) -> None:
-        from pyre.utils.rect_utils import ERectPivots, GetRotatedRectCornersWorldPos
+        from pyre.utils.rect_utils import GetRotatedRectVerticesWorldPos
 
         if not self.m_transform:
             return
 
-        corners = GetRotatedRectCornersWorldPos(
+        corners = GetRotatedRectVerticesWorldPos(
             self.m_worldPos,
             self.m_size,
             self.m_transform.m_worldRot,
-            ERectPivots.CENTER,
         )
 
         points = []

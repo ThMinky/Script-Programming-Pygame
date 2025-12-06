@@ -10,10 +10,12 @@ class InputManager:
         return cls.__instance
 
     def __init__(self) -> None:
-        if not hasattr(self, "_keys_held"):
-            self._keys_held: dict[int, bool] = {}
-            self._keys_pressed: set[int] = set()
-            self._keys_released: set[int] = set()
+        if not hasattr(self, "_mousePos"):
+            self._mousePos: pygame.Vector2 = pygame.Vector2(0, 0)
+
+            self._keysHeld: dict[int, bool] = {}
+            self._keysPressed: set[int] = set()
+            self._keysReleased: set[int] = set()
 
     @staticmethod
     def GetInstance() -> "InputManager":
@@ -22,22 +24,27 @@ class InputManager:
         return InputManager.__instance
 
     def Update(self) -> None:
-        self._keys_pressed.clear()
-        self._keys_released.clear()
+        self._keysPressed.clear()
+        self._keysReleased.clear()
 
-        for event in pygame.event.get([pygame.KEYDOWN, pygame.KEYUP]):
+        for event in pygame.event.get([pygame.KEYDOWN, pygame.KEYUP, pygame.MOUSEMOTION]):
             if event.type == pygame.KEYDOWN:
-                self._keys_held[event.key] = True
-                self._keys_pressed.add(event.key)
+                self._keysHeld[event.key] = True
+                self._keysPressed.add(event.key)
             elif event.type == pygame.KEYUP:
-                self._keys_held[event.key] = False
-                self._keys_released.add(event.key)
+                self._keysHeld[event.key] = False
+                self._keysReleased.add(event.key)
+            elif event.type == pygame.MOUSEMOTION:
+                self._mousePos.update(event.pos)
 
     def GetKey(self, key: int) -> bool:
-        return self._keys_held.get(key, False)
+        return self._keysHeld.get(key, False)
 
     def GetKeyDown(self, key: int) -> bool:
-        return key in self._keys_pressed
+        return key in self._keysPressed
 
     def GetKeyUp(self, key: int) -> bool:
-        return key in self._keys_released
+        return key in self._keysReleased
+
+    def GetMousePosition(self) -> pygame.Vector2:
+        return self._mousePos.copy()
