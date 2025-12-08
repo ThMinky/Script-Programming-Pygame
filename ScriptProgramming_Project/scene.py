@@ -7,12 +7,16 @@ import pygame
 
 # Engine
 from pyre.components import Sprite, Transform
-from pyre.components.colliders import BoxCollider, CircleCollider, LineCollider, PointCollider
+from pyre.components.colliders import BoxCollider, LineCollider
 from pyre.entities import Entity
 from pyre.managers import SpriteManager
 
 # Project
+from project.enemies import BasicEnemy, BossTag, EnemySpawner, HellspotEnemy, KamikazeEnemy
 from project.player.player_script import PlayerScript
+from project import Base
+from project import Blocker
+from project import Projectile
 
 
 class ELayers(IntEnum):
@@ -25,76 +29,79 @@ class ELayers(IntEnum):
 
 class Scene:
     def __init__(self):
-        self.m_player: Entity | None = None
+        self.m_mapTiles: list["Entity"] = []
+        self.m_mapBounds: list["Entity"] = []
+        self.m_mapDecors: list["Entity"] = []
 
-        self.m_baseRoot: Entity | None = None
-        self.m_base: list[Entity] = []
+        self.m_baseRoot: "Entity" | None = None
+        self.m_player: "Entity" | None = None
 
-        self.m_map: list[Entity] = []
-        self.m_decor: list[Entity] = []
-
-        self.m_enemiesBasic: list[Entity] = []
-        self.m_enemiesElite: list[Entity] = []
+        self.m_enemySpawner: "Entity" | None = None
+        self.m_enemies: list["Entity"] = []
 
         # Register Sprites
         # //////////////////////////////////////////////////
-        self.spriteMng = SpriteManager.GetInstance()
 
-        # Tiles
-        self.spriteMng.RegisterSprite("0", "resources/tiles/sand.png")
-        self.spriteMng.RegisterSprite("1", "resources/tiles/road_hor.png")
-        self.spriteMng.RegisterSprite("2", "resources/tiles/road_ver.png")
-        self.spriteMng.RegisterSprite("3", "resources/tiles/road_corner_ur.png")
-        self.spriteMng.RegisterSprite("4", "resources/tiles/road_corner_ul.png")
-        self.spriteMng.RegisterSprite("5", "resources/tiles/road_corner_dr.png")
-        self.spriteMng.RegisterSprite("6", "resources/tiles/road_corner_dl.png")
-        self.spriteMng.RegisterSprite("7", "resources/tiles/road_cross_r.png")
-        self.spriteMng.RegisterSprite("8", "resources/tiles/road_r_cross_r.png")
-        self.spriteMng.RegisterSprite("9", "resources/tiles/road_split_l.png")
-        self.spriteMng.RegisterSprite("10", "resources/tiles/road_split_u.png")
-        self.spriteMng.RegisterSprite("11", "resources/tiles/road_split_r.png")
-        self.spriteMng.RegisterSprite("12", "resources/tiles/road_split_d.png")
+        # Map Tiles
+        SpriteManager.GetInstance().RegisterSprite("0", "resources/tiles/sand.png")
+        SpriteManager.GetInstance().RegisterSprite("1", "resources/tiles/road_hor.png")
+        SpriteManager.GetInstance().RegisterSprite("2", "resources/tiles/road_ver.png")
+        SpriteManager.GetInstance().RegisterSprite("3", "resources/tiles/road_corner_ur.png")
+        SpriteManager.GetInstance().RegisterSprite("4", "resources/tiles/road_corner_ul.png")
+        SpriteManager.GetInstance().RegisterSprite("5", "resources/tiles/road_corner_dr.png")
+        SpriteManager.GetInstance().RegisterSprite("6", "resources/tiles/road_corner_dl.png")
+        SpriteManager.GetInstance().RegisterSprite("7", "resources/tiles/road_cross_r.png")
+        SpriteManager.GetInstance().RegisterSprite("8", "resources/tiles/road_r_cross_r.png")
+        SpriteManager.GetInstance().RegisterSprite("9", "resources/tiles/road_split_l.png")
+        SpriteManager.GetInstance().RegisterSprite("10", "resources/tiles/road_split_u.png")
+        SpriteManager.GetInstance().RegisterSprite("11", "resources/tiles/road_split_r.png")
+        SpriteManager.GetInstance().RegisterSprite("12", "resources/tiles/road_split_d.png")
 
-        # Tank Hulls / Barrels
-        # Player
-        self.spriteMng.RegisterSprite("sandTankHull", "resources/tanks/tank_hull_sand.png")
-        self.spriteMng.RegisterSprite("sandTankBarrel", "resources/tanks/tank_barrel_sand.png")
+        # Decors
+        SpriteManager.GetInstance().RegisterSprite("bush", "resources/decor/bush.png")
+        SpriteManager.GetInstance().RegisterSprite("twigs", "resources/decor/twigs.png")
+        SpriteManager.GetInstance().RegisterSprite("leaf", "resources/decor/leaf.png")
 
-        # Basic Enemy
-        self.spriteMng.RegisterSprite("darkTankHull", "resources/tanks/tank_hull_dark.png")
-        self.spriteMng.RegisterSprite("darkTankBarrel", "resources/tanks/tank_barrel_dark.png")
+        SpriteManager.GetInstance().RegisterSprite("sandbag", "resources/decor/sandbag.png")
 
-        # Elite Enemy
-        self.spriteMng.RegisterSprite("hellspot", "resources/tanks/tank_elite_hellspot.png")
+        SpriteManager.GetInstance().RegisterSprite("explodeBarrelTop", "resources/decor/explode_barrel_top.png")
+        SpriteManager.GetInstance().RegisterSprite("explodeBarrelSize", "resources/decor/explode_barrel_side.png")
 
-        # Auto Turret Stand / Head
-        self.spriteMng.RegisterSprite("autoTurretHead", "resources/autoTurret/auto_turret_head.png")
-        self.spriteMng.RegisterSprite("autoTurretStand", "resources/autoTurret/auto_turret_stand.png")
+        # Base
+        SpriteManager.GetInstance().RegisterSprite("autoTurretHead", "resources/autoTurret/auto_turret_head.png")
+        SpriteManager.GetInstance().RegisterSprite("autoTurretStand", "resources/autoTurret/auto_turret_stand.png")
 
-        # Ammo Wire / Barrel
-        self.spriteMng.RegisterSprite("ammoWire", "resources/autoTurret/ammo_wire.png")
-        self.spriteMng.RegisterSprite("ammoBarrel", "resources/autoTurret/ammo_barrel.png")
+        SpriteManager.GetInstance().RegisterSprite("ammoWire", "resources/autoTurret/ammo_wire.png")
+        SpriteManager.GetInstance().RegisterSprite("ammoBarrel", "resources/autoTurret/ammo_barrel.png")
 
-        # Sand Bag
-        self.spriteMng.RegisterSprite("sandbag", "resources/decor/sandbag.png")
+        # Tank Hulls / Barrels / Projectiles
+        SpriteManager.GetInstance().RegisterSprite("sandTankHull", "resources/tanks/tank_hull_sand.png")
+        SpriteManager.GetInstance().RegisterSprite("sandTankBarrel", "resources/tanks/tank_barrel_sand.png")
 
-        # Bushs / Twigs / Leafs
-        self.spriteMng.RegisterSprite("bush", "resources/decor/bush.png")
-        self.spriteMng.RegisterSprite("twigs", "resources/decor/twigs.png")
-        self.spriteMng.RegisterSprite("leaf", "resources/decor/leaf.png")
+        SpriteManager.GetInstance().RegisterSprite("darkTankHull", "resources/tanks/tank_hull_dark.png")
+        SpriteManager.GetInstance().RegisterSprite("darkTankBarrel", "resources/tanks/tank_barrel_dark.png")
+
+        SpriteManager.GetInstance().RegisterSprite("hellspot", "resources/tanks/tank_hull_hellspot.png")
+
+        SpriteManager.GetInstance().RegisterSprite("hellspot", "resources/tanks/tank_hull_kamikaze.png")
+
+        SpriteManager.GetInstance().RegisterSprite("projectile", "resources/tanks/tank_projectile.png")
 
         # //////////////////////////////////////////////////
 
-        self.m_map = self.CreateMap("map.txt", (64, 64))
+        self.m_mapTiles = self.CreateMap("map.txt", (64, 64))
+        self.m_mapBounds = self.CreateMapBounds(1280, 768)
+        self.m_mapDecors = self.CreateDecor(45, 75)
 
-        self.m_decor = self.CreateDecor(45, 75)
+        self.m_baseRoot = self.CreateBase(pygame.Vector2(640, 384))
+        self.m_player = self.CreatePlayer(pygame.Vector2(450, 450))
 
-        self.m_base = self.CreateBase(pygame.Vector2(640, 384))
+        # self.CreateBasicEnemy(pygame.Vector2(1280, 384), 90)
 
-        self.m_player = self.CreatePlayer(pygame.Vector2(200, 200))
+        self.m_enemySpawner = self.CreateEnemySpawner()
 
-    def CreateMap(self, path: str, tileSize: tuple[int, int]) -> list[Entity]:
-        self.tiles: list[Entity] = []
+    def CreateMap(self, path: str, tileSize: tuple[int, int]) -> list["Entity"]:
+        self.tiles: list["Entity"] = []
         self.mapData = self._LoadMapFromFile(path)
 
         for i in range(len(self.mapData)):
@@ -107,7 +114,7 @@ class Scene:
                 tile = Entity(localPos=pygame.Vector2(posX, posY))
                 tile.AddComponent(
                     Sprite(
-                        surface=self.spriteMng.GetSprite(tileId),
+                        spriteKey=tileId,
                         layer=ELayers.TILE,
                     )
                 )
@@ -115,8 +122,33 @@ class Scene:
 
         return self.tiles
 
-    def CreateDecor(self, minRadius: int, maxRadius: int) -> list[Entity]:
-        decorEntities: list[Entity] = []
+    def CreateMapBounds(self, mapWidth: int, mapHeight: int, thickness: int = 10) -> list["Entity"]:
+        bounds: list["Entity"] = []
+
+        topBound = Entity(localPos=pygame.Vector2(mapWidth / 2, (thickness / 2) - 10))
+        topBound.AddComponent(BoxCollider(size=pygame.Vector2(mapWidth, thickness)))
+        topBound.AddComponent(Blocker())
+        bounds.append(topBound)
+
+        leftBound = Entity(localPos=pygame.Vector2((thickness / 2) - 10, mapHeight / 2))
+        leftBound.AddComponent(BoxCollider(size=pygame.Vector2(thickness, mapHeight)))
+        leftBound.AddComponent(Blocker())
+        bounds.append(leftBound)
+
+        bottomBound = Entity(localPos=pygame.Vector2(mapWidth / 2, (mapHeight - thickness / 2) + 9))
+        bottomBound.AddComponent(BoxCollider(size=pygame.Vector2(mapWidth, thickness)))
+        bottomBound.AddComponent(Blocker())
+        bounds.append(bottomBound)
+
+        rightBound = Entity(localPos=pygame.Vector2((mapWidth - thickness / 2) + 9, mapHeight / 2))
+        rightBound.AddComponent(BoxCollider(size=pygame.Vector2(thickness, mapHeight)))
+        rightBound.AddComponent(Blocker())
+        bounds.append(rightBound)
+
+        return bounds
+
+    def CreateDecor(self, minRadius: int, maxRadius: int) -> list["Entity"]:
+        decors: list["Entity"] = []
 
         bushPositions: list[pygame.Vector2] = [
             pygame.Vector2(260, 85),
@@ -143,11 +175,11 @@ class Scene:
             bush = Entity(localPos=bushPos)
             bush.AddComponent(
                 Sprite(
-                    surface=self.spriteMng.GetSprite("bush"),
+                    spriteKey="bush",
                     layer=ELayers.DECOR,
                 )
             )
-            decorEntities.append(bush)
+            decors.append(bush)
 
             twigCount = random.randint(1, 2)
             for _ in range(twigCount):
@@ -155,11 +187,11 @@ class Scene:
                 twig = Entity(localPos=bushPos + offset)
                 twig.AddComponent(
                     Sprite(
-                        surface=self.spriteMng.GetSprite("twigs"),
+                        spriteKey="twigs",
                         layer=ELayers.DECOR,
                     )
                 )
-                decorEntities.append(twig)
+                decors.append(twig)
 
             leafCount = random.randint(1, 3)
             for _ in range(leafCount):
@@ -167,26 +199,22 @@ class Scene:
                 leaf = Entity(localPos=bushPos + offset)
                 leaf.AddComponent(
                     Sprite(
-                        surface=self.spriteMng.GetSprite("leaf"),
+                        spriteKey="leaf",
                         layer=ELayers.DECOR,
                     )
                 )
-                decorEntities.append(leaf)
+                decors.append(leaf)
 
-        return decorEntities
+        return decors
 
-    def CreateBase(self, center: pygame.Vector2) -> list:
-        baseEntities: list[Entity] = []
-
-        # Root
+    def CreateBase(self, center: pygame.Vector2) -> "Entity":
         baseRoot = Entity(localPos=center)
         baseRoot.AddComponent(BoxCollider(size=pygame.Vector2(130, 130)))
-        self.m_baseRoot = baseRoot
-        baseEntities.append(baseRoot)
+        baseRoot.AddComponent(Base())
+        baseRoot.AddComponent(Blocker())
 
-        baseTransform = baseRoot.GetComponentByType(Transform)
+        baseRootTransform = baseRoot.GetComponentByType(Transform)
 
-        # Offsets
         wireOffsets: list[tuple[pygame.Vector2, float, pygame.Vector2]] = [
             (pygame.Vector2(-25, -15), -50, pygame.Vector2(0.85, 0.85)),
             (pygame.Vector2(25, -15), 50, pygame.Vector2(0.85, 0.85)),
@@ -212,72 +240,63 @@ class Scene:
             (pygame.Vector2(-62, -32), 90),
         ]
 
-        # Ammo Barrel
-        ammoBarrel = Entity(parentTransform=baseTransform)
+        ammoBarrel = Entity(parentTransform=baseRootTransform)
         ammoBarrel.AddComponent(
             Sprite(
-                surface=self.spriteMng.GetInstance().GetSprite("ammoBarrel"),
-                layer=ELayers.INTERACT,
+                spriteKey="ammoBarrel",
+                layer=ELayers.DECOR,
             )
         )
-        baseEntities.append(ammoBarrel)
 
-        # Ammo Wires
         for pos, rot, scale in wireOffsets:
             ammoWire = Entity(
-                parentTransform=baseTransform,
+                parentTransform=baseRootTransform,
                 localPos=pos,
                 localRot=rot,
                 localScale=scale,
             )
             ammoWire.AddComponent(
                 Sprite(
-                    surface=self.spriteMng.GetSprite("ammoWire"),
-                    layer=ELayers.ENTITY,
+                    spriteKey="ammoWire",
+                    layer=ELayers.DECOR,
                 )
             )
-            baseEntities.append(ammoWire)
 
-        # Turret Stands / Turret Heads
         for off in turretOffsets:
-            # Turret Stand
             turretStand = Entity(
                 localPos=off,
-                parentTransform=baseTransform,
+                parentTransform=baseRootTransform,
             )
             turretStand.AddComponent(
                 Sprite(
-                    surface=self.spriteMng.GetSprite("autoTurretStand"),
+                    spriteKey="autoTurretStand",
                     layer=ELayers.ENTITY,
                 )
             )
-            baseEntities.append(turretStand)
 
-            # Turret Head
             turretHead = Entity(parentTransform=turretStand.GetComponentByType(Transform))
-            turretHead.AddComponent(Sprite(surface=self.spriteMng.GetSprite("autoTurretHead")))
-            baseEntities.append(turretHead)
+            turretHead.AddComponent(Sprite(spriteKey="autoTurretHead"))
 
-        # Sandbags
         for pos, rot in sandbagOffsets:
             sandbag = Entity(
                 localPos=pos,
                 localRot=rot,
-                parentTransform=baseTransform,
+                parentTransform=baseRootTransform,
             )
             sandbag.AddComponent(
                 Sprite(
-                    surface=self.spriteMng.GetSprite("sandbag"),
-                    layer=ELayers.INTERACT,
+                    spriteKey="sandbag",
+                    layer=ELayers.DECOR,
                 )
             )
-            baseEntities.append(sandbag)
 
-    def CreatePlayer(self, pos: pygame.Vector2) -> Entity:
+        return baseRoot
+
+    def CreatePlayer(self, pos: pygame.Vector2) -> "Entity":
         hull = Entity(localPos=pos)
         hull.AddComponent(
             Sprite(
-                surface=self.spriteMng.GetSprite("sandTankHull"),
+                spriteKey="sandTankHull",
                 layer=ELayers.ENTITY,
             )
         )
@@ -285,15 +304,112 @@ class Scene:
         hull.AddComponent(PlayerScript())
 
         barrel = Entity(
+            localPos=pygame.Vector2(0, -5),
             parentTransform=hull.GetComponentByType(Transform),
-            localPos=pygame.Vector2(0, 5),
-            localRot=180,
         )
-        barrel.AddComponent(Sprite(surface=self.spriteMng.GetSprite("sandTankBarrel")))
+        barrel.AddComponent(Sprite(spriteKey="sandTankBarrel"))
 
         hull.GetComponentByType(PlayerScript).m_barrel = barrel
+        hull.GetComponentByType(PlayerScript).m_scene = self
 
         return hull
+
+    def CreateEnemySpawner(self) -> "Entity":
+        enemySpawner = Entity()
+        enemySpawner.AddComponent(EnemySpawner())
+
+        enemySpawner.GetComponentByType(EnemySpawner).m_scene = self
+
+        return enemySpawner
+
+    def CreateBasicEnemy(self, pos: pygame.Vector2, rot: float) -> None:
+        hull = Entity(
+            localPos=pos,
+            localRot=rot,
+        )
+        hull.AddComponent(
+            Sprite(
+                spriteKey="darkTankHull",
+                layer=ELayers.ENTITY,
+            )
+        )
+        hull.AddComponent(BoxCollider())
+        hull.AddComponent(BasicEnemy())
+        hull.AddComponent(Blocker())
+
+        barrel = Entity(
+            localPos=pygame.Vector2(0, -5),
+            parentTransform=hull.GetComponentByType(Transform),
+        )
+        barrel.AddComponent(Sprite(spriteKey="darkTankBarrel"))
+
+        hull.GetComponentByType(BasicEnemy).m_barrelTransform = barrel.GetComponentByType(Transform)
+        hull.GetComponentByType(BasicEnemy).m_scene = self
+
+        self.m_enemies.append(hull)
+
+        return hull
+
+    def CreateHellspotEnemy(self, pos: pygame.Vector2, rot: float) -> None:
+        hull = Entity(
+            localPos=pos,
+            localRot=rot,
+        )
+        hull.AddComponent(
+            Sprite(
+                spriteKey="hellspot",
+                layer=ELayers.ENTITY,
+            )
+        )
+        hull.AddComponent(BoxCollider())
+        hull.AddComponent(HellspotEnemy())
+        hull.AddComponent(BossTag())
+        hull.AddComponent(Blocker())
+
+        hull.GetComponentByType(HellspotEnemy).m_scene = self
+
+        self.m_enemies.append(hull)
+
+        return hull
+
+    def CreateKamikazeEnemy(self, pos: pygame.Vector2, rot: float) -> None:
+        hull = Entity(
+            localPos=pos,
+            localRot=rot,
+        )
+        hull.AddComponent(
+            Sprite(
+                spriteKey="darkTankHull",
+                layer=ELayers.ENTITY,
+            )
+        )
+        hull.AddComponent(BoxCollider())
+        hull.AddComponent(KamikazeEnemy())
+        hull.AddComponent(BossTag())
+        hull.AddComponent(Blocker())
+
+        hull.GetComponentByType(KamikazeEnemy).m_scene = self
+
+        self.m_enemies.append(hull)
+
+        return hull
+
+    def CreateProjectile(self, dmg: int, speed: int, senderTransform: "Transform"):
+        projSpawnOffset = senderTransform.GetForwardVec() * 40
+        projSpawnPoint = senderTransform.m_worldPos + projSpawnOffset
+
+        projectile = Entity(
+            localPos=projSpawnPoint,
+            localRot=senderTransform.m_worldRot,
+        )
+        projectile.AddComponent(
+            Sprite(
+                spriteKey="projectile",
+                layer=ELayers.ENTITY,
+            )
+        )
+        projectile.AddComponent(LineCollider())
+        projectile.AddComponent(Projectile(dmg, speed, senderTransform.GetForwardVec()))
 
     def _LoadMapFromFile(self, path) -> list[list[str]]:
         mapData: list[list[str]] = []

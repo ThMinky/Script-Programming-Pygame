@@ -21,10 +21,21 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="project\base.py" />
+    <Compile Include="project\blocker.py" />
     <Compile Include="project\debug\__init__.py" />
+    <Compile Include="project\enemies\basic_enemy.py" />
+    <Compile Include="project\enemies\boss_tag.py" />
+    <Compile Include="project\enemies\hellspot_enemy.py" />
+    <Compile Include="project\enemies\kamikaze_enemy.py" />
+    <Compile Include="project\enemies\__init__.py" />
+    <Compile Include="project\enemies\enemy_spawner.py" />
+    <Compile Include="project\interfaces\IDamagable.py" />
+    <Compile Include="project\interfaces\__init__.py" />
     <Compile Include="project\player\player_script.py" />
     <Compile Include="project\player\move_commands\__init__.py" />
     <Compile Include="project\player\__init__.py" />
+    <Compile Include="project\projectile.py" />
     <Compile Include="project\__init__.py" />
     <Compile Include="main.py" />
     <Compile Include="project\debug\toggle_fps_debug.py" />
@@ -60,6 +71,7 @@
     <Compile Include="pyre\systems\base_system.py" />
     <Compile Include="pyre\systems\__init__.py" />
     <Compile Include="pyre\time.py" />
+    <Compile Include="pyre\timer.py" />
     <Compile Include="pyre\utils\collision_utils.py" />
     <Compile Include="pyre\utils\math_utils.py" />
     <Compile Include="pyre\utils\rect_utils.py" />
@@ -72,6 +84,8 @@
   <ItemGroup>
     <Folder Include="project\" />
     <Folder Include="project\debug\" />
+    <Folder Include="project\interfaces\" />
+    <Folder Include="project\enemies\" />
     <Folder Include="project\player\" />
     <Folder Include="project\player\move_commands\" />
     <Folder Include="pyre\" />

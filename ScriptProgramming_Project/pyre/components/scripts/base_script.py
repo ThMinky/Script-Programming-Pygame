@@ -5,7 +5,7 @@ class BaseScript(BaseComponent):
     def __init__(self) -> None:
         super().__init__()
 
-        self.Init()
+        self._m_started: bool = False
 
     def Enable(self) -> None:
         super().Enable()
@@ -19,9 +19,6 @@ class BaseScript(BaseComponent):
 
     def Destroy(self) -> None:
         super().Destroy()
-
-    def Awake(self) -> None:
-        pass
 
     def Start(self) -> None:
         pass

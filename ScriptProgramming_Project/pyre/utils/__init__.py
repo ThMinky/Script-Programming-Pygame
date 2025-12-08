@@ -6,7 +6,7 @@ from .collision_utils import (
 )
 
 from .math_utils import (
-    RotatePointAroundPivot,
+    GetAngleFromDirVector ,RotatePointAroundPivot,
 )
 
 from .rect_utils import (
@@ -19,6 +19,6 @@ __all__ = [
     "CircleBox", "CircleCircle", "CircleLine", "CirclePoint",
     "LineBox", "LineCircle", "LineLine", "LinePoint",
     "PointBox", "PointCircle", "PointLine", "PointPoint",
-    "RotatePointAroundPivot",
+    "GetAngleFromDirVector", "RotatePointAroundPivot",
     "RECT_CORNER_OFFSETS_FROM_CENTER", "GetRotatedRectVerticesWorldPos", "GetNormalizedRectNormals",
 ]

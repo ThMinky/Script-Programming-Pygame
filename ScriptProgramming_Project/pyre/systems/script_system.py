@@ -2,7 +2,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from pyre.components import Script
+    from pyre.components.scripts import BaseScript
 
 
 class ScriptSystem:
@@ -15,10 +15,10 @@ class ScriptSystem:
 
     def __init__(self) -> None:
         if not hasattr(self, "_m_scripts"):
-            self._m_scripts: list["Script"] = []
-            self._m_to_add: list["Script"] = []
-            self._m_to_remove: list["Script"] = []
-            self._m_pending_starts: list[Script] = []
+            self._m_scripts: list["BaseScript"] = []
+            self._m_to_add: list["BaseScript"] = []
+            self._m_to_remove: list["BaseScript"] = []
+            self._m_pending_starts: list["BaseScript"] = []
 
     @staticmethod
     def GetInstance() -> "ScriptSystem":
@@ -26,7 +26,7 @@ class ScriptSystem:
             ScriptSystem()
         return ScriptSystem.__instance
 
-    def Register(self, script: "Script") -> None:
+    def Register(self, script: "BaseScript") -> None:
         from pyre.components.scripts import BaseScript
 
         if isinstance(script, BaseScript):
@@ -34,10 +34,10 @@ class ScriptSystem:
                 if script not in self._m_scripts:
                     self._m_to_add.append(script)
 
-    def Unregister(self, script: "Script") -> None:
-        from pyre.components import Script
+    def Unregister(self, script: "BaseScript") -> None:
+        from pyre.components.scripts import BaseScript
 
-        if isinstance(script, Script):
+        if isinstance(script, BaseScript):
             if script not in self._m_to_remove:
                 self._m_to_remove.append(script)
 
@@ -49,15 +49,14 @@ class ScriptSystem:
 
     def _FlushChanges(self):
         for script in self._m_to_add:
-            script.Awake()
-            self._m_pending_starts.append(script)
-
-        self._m_scripts.extend(self._m_to_add)
+            self._m_scripts.append(script)
+            if not getattr(script, "_m_started", False):
+                self._m_pending_starts.append(script)
         self._m_to_add.clear()
 
         for script in self._m_pending_starts:
-            if script.m_enabled:
-                script.Start()
+            script.Start()
+            script._m_started = True
         self._m_pending_starts.clear()
 
         for script in self._m_to_remove:

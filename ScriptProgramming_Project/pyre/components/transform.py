@@ -39,8 +39,8 @@ class Transform(BaseComponent):
         self.m_onRotationChanged: "Event" = Event()
         self.m_onScaleChanged: "Event" = Event()
 
-    def Init(self) -> None:
-        super().Init()
+    def _Init(self) -> None:
+        super()._Init()
 
         self._UpdateWorldTransform()
 
@@ -48,13 +48,17 @@ class Transform(BaseComponent):
             if self not in self.m_parentTransform.m_childrenTransforms:
                 self.m_parentTransform.m_childrenTransforms.append(self)
 
-    def Uninit(self) -> None:
+    def _Uninit(self) -> None:
         if self.m_parentTransform:
             if self in self.m_parentTransform.m_childrenTransforms:
                 self.m_parentTransform.m_childrenTransforms.remove(self)
             self.m_parentTransform = None
 
-        super().Uninit()
+        for child in list(self.m_childrenTransforms):
+            if child.m_parent:
+                child.m_parent.Destroy()
+
+        super()._Uninit()
 
     def Enable(self) -> None:
         pass
@@ -78,7 +82,7 @@ class Transform(BaseComponent):
         self._UpdateWorldScale()
 
     def GetForwardVec(self) -> pygame.Vector2:
-        rad = math.radians(self.m_worldRot - 90)
+        rad = math.radians(self.m_worldRot + 90)
         return pygame.Vector2(math.cos(rad), math.sin(rad))
 
     def GetRightVec(self) -> pygame.Vector2:

@@ -24,19 +24,19 @@ class BaseCollider(BaseComponent, ABC):
         self.m_sprite: "Sprite" | None = None
         self.m_transform: "Transform" | None = None
 
-    def Init(self) -> None:
-        super().Init()
+    def _Init(self) -> None:
+        super()._Init()
 
         from pyre.components import Sprite, Transform
 
         self.m_sprite = self.m_parent.GetComponentByType(Sprite)
         self.m_transform = self.m_parent.GetComponentByType(Transform)
 
-    def Uninit(self) -> None:
-        self.m_transform = None
-        self.m_sprite = None
+        if not self.m_transform:
+            raise RuntimeError("Component without Transform found!")
 
-        super().Uninit()
+    def _Uninit(self) -> None:
+        super()._Uninit()
 
     def Enable(self) -> None:
         super().Enable()

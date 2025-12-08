@@ -1,5 +1,4 @@
 ﻿from __future__ import annotations
-from calendar import c
 from typing import TYPE_CHECKING
 
 import pygame
@@ -27,6 +26,9 @@ class RenderSystem(BaseSystem):
             self.m_debugColliders: bool = False
             self.m_debugFPS: bool = False
 
+            # Enemy Marking
+            self.m_debugDrawQueue: list[tuple] = []
+
     @staticmethod
     def GetInstance() -> "RenderSystem":
         if RenderSystem.__instance is None:
@@ -48,7 +50,7 @@ class RenderSystem(BaseSystem):
 
     def Render(self, surface: pygame.Surface) -> None:
         from pyre.components import Transform
-         
+
         self._FlushChanges()
 
         if not self._m_sorted:
@@ -74,6 +76,17 @@ class RenderSystem(BaseSystem):
             from pyre.time import Time
 
             Time.DrawFPS(surface)
+
+        # Enemy Marking
+        for item in self.m_debugDrawQueue:
+            if item[0] == "line":
+                _, start, end, color, width = item
+                pygame.draw.line(surface, color, start, end, width)
+            elif item[0] == "circle":
+                _, center, radius, color, width = item
+                pygame.draw.circle(surface, color, radius, width)
+
+        self.m_debugDrawQueue.clear()
 
     def _FlushChanges(self) -> None:
         self.m_sprites.extend(self._m_to_add)
@@ -125,3 +138,10 @@ class RenderSystem(BaseSystem):
 
         for child in transform.m_childrenTransforms:
             self._AssignHierarchyLayer(child, baseLayer)
+
+    # Enemy Marking
+    def DebugLine(self, start, end, color=(255, 0, 0), width=1):
+        self.m_debugDrawQueue.append(("line", start, end, color, width))
+
+    def DebugCircle(self, center, radius, color=(255, 0, 0), width=1):
+        self.m_debugDrawQueue.append(("circle", center, radius, color, width))

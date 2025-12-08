@@ -17,11 +17,8 @@ class LineCollider(BaseCollider):
         self.m_startPoint: pygame.Vector2 = pygame.Vector2(0, 0)
         self.m_endPoint: pygame.Vector2 = pygame.Vector2(0, 0)
 
-    def Init(self) -> None:
-        super().Init()
-
-        if not self.m_transform:
-            return
+    def _Init(self) -> None:
+        super()._Init()
 
         self.m_transform.m_onPositionChanged.Add(self.UpdatePosition)
         self.m_transform.m_onPositionChanged.Add(self.UpdateBounds)
@@ -29,15 +26,12 @@ class LineCollider(BaseCollider):
         self.UpdatePosition()
         self.UpdateBounds()
 
-    def Uninit(self) -> None:
-        if not self.m_transform:
-            super().Uninit()
-            return
+    def _Uninit(self) -> None:
+        if self.m_transform:
+            self.m_transform.m_onPositionChanged.Remove(self.UpdatePosition)
+            self.m_transform.m_onPositionChanged.Remove(self.UpdateBounds)
 
-        self.m_transform.m_onPositionChanged.Remove(self.UpdatePosition)
-        self.m_transform.m_onPositionChanged.Remove(self.UpdateBounds)
-
-        super().Uninit()
+        super()._Uninit()
 
     def Enable(self) -> None:
         super().Enable()

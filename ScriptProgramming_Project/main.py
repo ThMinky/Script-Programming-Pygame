@@ -1,4 +1,5 @@
 import os
+from turtle import width
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
@@ -10,7 +11,6 @@ from pyre.managers import InputManager, SystemManager
 from pyre.systems import RenderSystem, ScriptSystem
 from pyre.time import Time
 
-
 # Project
 from project.debug import ToggleCollidersDebug, ToggleFpsDebug
 
@@ -20,7 +20,7 @@ from scene import Scene
 # ///////////////////////////////////////////////////////////////////////////
 # Init
 pygame.init()
-window = Window(1280, 768, "BlastField")
+window = Window(width=1280, height=768, title="BlastField")
 window.Init()
 clock = pygame.time.Clock()
 
@@ -37,7 +37,7 @@ currentScene = Scene()
 running = True
 while running:
     Time.Update()
-    
+
     InputManager.GetInstance().Update()
 
     for event in pygame.event.get():

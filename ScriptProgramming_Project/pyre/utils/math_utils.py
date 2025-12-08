@@ -3,6 +3,12 @@ import math
 import pygame
 
 
+def GetAngleFromDirVector(dirVector: pygame.Vector2) -> float:
+    angle = math.degrees(math.atan2(dirVector.y, dirVector.x)) - 90
+
+    return angle
+
+
 def RotatePointAroundPivot(point: pygame.Vector2, pivot: pygame.Vector2, angleDeg: float) -> pygame.Vector2:
     rad = math.radians(angleDeg)
 

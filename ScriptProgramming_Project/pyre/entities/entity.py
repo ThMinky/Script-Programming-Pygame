@@ -40,7 +40,7 @@ class Entity:
                 return
 
         comp.m_parent = self
-        comp.Init()
+        comp._Init()
         self.m_comps.append(comp)
 
     def RemoveComponent(self, comp: "BaseComponent") -> None:
@@ -50,34 +50,22 @@ class Entity:
             return
 
         if comp in self.m_comps:
-            comp.Uninit()
+            comp._Uninit()
             self.m_comps.remove(comp)
 
-    def RemoveComponentByType(self, compType: type["BaseComponent"]) -> None:
+    def RemoveComponentsByType(self, compType: type[T]) -> None:
         from pyre.components import Transform
 
         if compType is Transform:
             return
 
+        toRemove: list[T] = []
         for comp in self.m_comps:
             if isinstance(comp, compType):
-                comp.Uninit()
-                self.m_comps.remove(comp)
-                break
+                toRemove.append(comp)
 
-    def RemoveComponentsByType(self, compType: type["BaseComponent"]) -> None:
-        from pyre.components import Transform
-
-        if compType is Transform:
-            return
-
-        temp: list["BaseComponent"] = []
-        for comp in self.m_comps:
-            if isinstance(comp, compType):
-                temp.append(comp)
-
-        for comp in temp:
-            comp.Uninit()
+        for comp in toRemove:
+            comp._Uninit()
             self.m_comps.remove(comp)
 
     def GetComponentByType(self, compType: Type[T]) -> T | None:
@@ -87,29 +75,14 @@ class Entity:
         return None
 
     def GetComponentsByType(self, compType: Type[T]) -> list[T]:
-        temp: list["BaseComponent"] = []
+        results: list[T] = []
         for comp in self.m_comps:
             if isinstance(comp, compType):
-                temp.append(comp)
-        return temp
+                results.append(comp)
+        return results
 
-    def Destroy(self):
-        from pyre.components import Transform
-
-        transform = self.GetComponentByType(Transform)
-
-        if not transform:
-            self._UninitializeComponents()
-            return
-
-        for child in list(transform.m_childrenTransforms):
-            childEntity = child.m_parent
-            childEntity.Destroy()
-
-        self._UninitializeComponents()
-
-    def _UninitializeComponents(self):
-        for comp in list(self.m_comps):
-            comp.Uninit()
+    def Destroy(self) -> None:
+        for comp in reversed(list(self.m_comps)):
+            comp._Uninit()
 
         self.m_comps.clear()

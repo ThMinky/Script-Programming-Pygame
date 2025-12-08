@@ -3,7 +3,7 @@ from .components import (
 )
 
 from .components.scripts import (
-    BaseScript,    
+    BaseScript,  
 )
 
 from .components.colliders import (
@@ -35,13 +35,15 @@ from .utils import (
     CircleBox, CircleCircle, CircleLine, CirclePoint,
     LineBox, LineCircle, LineLine, LinePoint,
     PointBox, PointCircle, PointLine, PointPoint,
-    RotatePointAroundPivot,
+    GetAngleFromDirVector, RotatePointAroundPivot,
     RECT_CORNER_OFFSETS_FROM_CENTER, GetRotatedRectVerticesWorldPos, GetNormalizedRectNormals,
 )
 
 from .command import Command
 
 from .time import Time
+
+from .timer import Timer
 
 
 __all__ = [
@@ -57,8 +59,9 @@ __all__ = [
     "CircleBox", "CircleCircle", "CircleLine", "CirclePoint",
     "LineBox", "LineCircle", "LineLine", "LinePoint",
     "PointBox", "PointCircle", "PointLine", "PointPoint",
-    "RotatePointAroundPivot",
+    "GetAngleFromDirVector", "RotatePointAroundPivot",
     "RECT_CORNER_OFFSETS_FROM_CENTER", "GetRotatedRectVerticesWorldPos", "GetNormalizedRectNormals",  
     "Command",
     "Time",
+    "Timer",
 ]

@@ -14,27 +14,21 @@ class BoxCollider(BaseCollider):
 
         self.m_size: pygame.Vector2 | None = size if size is not None else None
 
-    def Init(self) -> None:
-        super().Init()
-
-        if not self.m_transform:
-            return
+    def _Init(self) -> None:
+        super()._Init()
 
         self.m_transform.m_onPositionChanged.Add(self.UpdatePosition)
-        self.m_transform.m_onPositionChanged.Add(self.UpdateBounds)
+        self.m_transform.m_onScaleChanged.Add(self.UpdateBounds)
 
         self.UpdatePosition()
         self.UpdateBounds()
 
-    def Uninit(self) -> None:
-        if not self.m_transform:
-            super().Uninit()
-            return
+    def _Uninit(self) -> None:
+        if self.m_transform:
+            self.m_transform.m_onPositionChanged.Remove(self.UpdatePosition)
+            self.m_transform.m_onScaleChanged.Remove(self.UpdateBounds)
 
-        self.m_transform.m_onPositionChanged.Remove(self.UpdatePosition)
-        self.m_transform.m_onPositionChanged.Remove(self.UpdateBounds)
-
-        super().Uninit()
+        super()._Uninit()
 
     def Enable(self) -> None:
         super().Enable()
