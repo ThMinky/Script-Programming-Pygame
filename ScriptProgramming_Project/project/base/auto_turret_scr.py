@@ -6,11 +6,12 @@ import weakref
 from pyre.components import Transform
 from pyre.components.scripts import MonoScript
 from pyre.entities import Entity
-from pyre.systems import RenderSystem
+from pyre.managers import SoundManager
 from pyre.utils.math_utils import GetAngleFromDirVector
 from pyre.timer import Timer
 
 from project.interfaces import IDamagable
+from project.ui_scr import UIScr
 
 if TYPE_CHECKING:
     from project.base import BaseScr
@@ -22,8 +23,8 @@ class AutoTurretScr(MonoScript):
         super().__init__()
 
         # Refs
-        self.m_scene: "Scene" | None = None # Auto assign
-        self.m_baseScr: "BaseScr" | None = None # Auto assign
+        self.m_scene: "Scene" | None = None  # Auto assign
+        self.m_baseScr: "BaseScr" | None = None  # Auto assign
 
         self.m_targetRef: weakref.ref["Entity"] | None = None
 
@@ -56,6 +57,9 @@ class AutoTurretScr(MonoScript):
 
     def OnDisable(self) -> None:
         pass
+
+    def Destroy(self) -> None:
+        super().Destroy()
 
     def GetClosestTarget(self) -> None:
         if self.m_targetRef is not None:
@@ -106,13 +110,20 @@ class AutoTurretScr(MonoScript):
             self.m_targetRef = None
             return
 
-        if self.m_reloadTimer.m_flag:
+        if self.m_reloadTimer.m_flag and self.m_baseScr.m_autoTurretAmmo > 0:
             for script in self.m_targetRef().GetComponentsByType(MonoScript):
                 if isinstance(script, IDamagable):
                     script.TakeDamage(self.m_dmg)
+
+                    self.m_baseScr.m_autoTurretAmmo -= 1
+                    UIScr.GetInstance().m_baseAmmo -= 1
+
+                    SoundManager.GetInstance().PlaySound("turretFire")
 
                     self.m_reloadTimer.Reset()
                     break
 
     def Gizmo(self) -> None:
+        from pyre.systems import RenderSystem
+
         RenderSystem.GetInstance().DebugCircle(self.m_tr.m_worldPos, self.m_range, (255, 255, 0))

@@ -1,8 +1,6 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 
-import weakref
-
 import pygame
 
 # Engine
@@ -10,7 +8,7 @@ from pyre.components import Transform
 from pyre.components.colliders import BaseCollider
 from pyre.components.scripts import MonoScript
 from pyre.entities import Entity
-from pyre.managers import InputManager
+from pyre.managers import InputManager, SoundManager
 from pyre.time import Time
 from pyre.timer import Timer
 
@@ -18,9 +16,9 @@ from pyre.timer import Timer
 from project.interfaces import IDamagable
 from project.player.move_cmds import MoveBackwardCmd, MoveForwardCmd, RotateLeftCmd, RotateRightCmd
 from project.tags import BlockerTag
+from project.ui_scr import UIScr
 
 if TYPE_CHECKING:
-    from project.base import BaseScr
     from scene import Scene
 
 
@@ -30,9 +28,7 @@ class PlayerScr(MonoScript, IDamagable):
 
         # Refs
         self.m_scene: "Scene" | None = None  # Auto assign
-        self.m_barrel: "Entity" | None = None
-
-        self.m_baseScrRef: weakref.ref["BaseScr"] | None = None  # Auto assign
+        self.m_barrel: "Entity" | None = None  # Auto assign
 
         # Caches
         self.m_tr: "Transform" | None = None
@@ -61,11 +57,17 @@ class PlayerScr(MonoScript, IDamagable):
         self.m_cmd_rotTurretRight: "RotateRightCmd" = RotateRightCmd(self.m_barrelRotSpeed)
 
     def Start(self) -> None:
+
         # Caches
         self.m_tr = self.m_parent.GetComponentByType(Transform)
         self.m_collider = self.m_parent.GetComponentByType(BaseCollider)
 
     def Update(self) -> None:
+        if self.m_reloadTimer.m_flag:
+            UIScr.GetInstance().m_playerAmmo = 1
+        else:
+            UIScr.GetInstance().m_playerAmmo = 0
+
         isMoving = False
         oldPos = self.m_tr.m_worldPos
 
@@ -112,13 +114,25 @@ class PlayerScr(MonoScript, IDamagable):
     def OnDisable(self) -> None:
         pass
 
+    def Destroy(self) -> None:
+        super().Destroy()
+
     def TakeDamage(self, amount: float) -> None:
+        import globals
+
+        UIScr.GetInstance().m_playerHp -= amount
+
         self.m_hp -= amount
 
         if self.m_hp <= 0:
             self.m_scene.m_player = None
-            
+
             self.m_parent.Destroy()
 
+            globals.won = False
+            globals.running = False
+
     def Shoot(self) -> None:
+        SoundManager.GetInstance().PlaySound("tankFire")
+
         self.m_scene.CreateProjectile(self.m_projDmg, self.m_projSpeed, self.m_barrel.GetComponentByType(Transform))

@@ -23,7 +23,7 @@ from .events import (
 )
 
 from .managers import (
-    InputManager, SpriteManager, SystemManager,
+    InputManager, SoundManager, SpriteManager, SystemManager,
 )
 
 from .systems import (
@@ -53,7 +53,7 @@ __all__ = [
     "Window",
     "Entity",
     "Event",
-    "InputManager", "SpriteManager", "SystemManager",
+    "InputManager", "SoundManager", "SpriteManager", "SystemManager",
     "BaseSystem", "CollisionSystem", "RenderSystem", "ScriptSystem",
     "BoxBox", "BoxCircle", "BoxLine", "BoxPoint",
     "CircleBox", "CircleCircle", "CircleLine", "CirclePoint",

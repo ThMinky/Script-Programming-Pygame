@@ -5,7 +5,7 @@ import weakref
 
 from pyre.components import Transform
 from pyre.components.scripts import MonoScript
-from pyre.systems import RenderSystem
+from pyre.managers import SoundManager
 from pyre.time import Time
 
 from project.interfaces import IDamagable
@@ -20,8 +20,8 @@ class KamikazeScr(MonoScript, IDamagable):
         super().__init__()
 
         # Refs
-        self.m_scene: "Scene" | None = None # Auto assign
-        self.m_spawnPoint: "Spawns" | None = None # Auto assign
+        self.m_scene: "Scene" | None = None  # Auto assign
+        self.m_spawnPoint: "Spawns" | None = None  # Auto assign
 
         self.m_baseTrRef: weakref.ref["Transform"] | None = None
         self.m_playerTrRef: weakref.ref["Transform"] | None = None
@@ -31,10 +31,10 @@ class KamikazeScr(MonoScript, IDamagable):
 
         # Vars
         self.m_hp: float = 8
-        self.m_moveSpeed: float = 5
+        self.m_moveSpeed: float = 8
 
-        self.m_blastDmg: float = 10
-        self.m_blastRadius: float = 75
+        self.m_blastDmg: float = 100
+        self.m_blastRadius: float = 100
 
         self.m_triggerRange: float = 100
 
@@ -42,7 +42,7 @@ class KamikazeScr(MonoScript, IDamagable):
         # Refs
         if self.m_scene.m_baseRoot is not None:
             self.m_baseTrRef = weakref.ref(self.m_scene.m_baseRoot.GetComponentByType(Transform))
-        
+
         if self.m_scene.m_player is not None:
             self.m_playerTrRef = weakref.ref(self.m_scene.m_player.GetComponentByType(Transform))
 
@@ -56,11 +56,14 @@ class KamikazeScr(MonoScript, IDamagable):
 
         self.MoveTowardsBase()
 
-    def Enable(self) -> None:
+    def OnEnable(self) -> None:
         pass
 
-    def Disable(self) -> None:
+    def OnDisable(self) -> None:
         pass
+
+    def Destroy(self):
+        super().Destroy()
 
     def CheckForTargetsInTriggerRange(self) -> None:
         if self.m_baseTrRef is not None:
@@ -94,6 +97,8 @@ class KamikazeScr(MonoScript, IDamagable):
 
         if self.m_hp <= 0:
 
+            SoundManager.GetInstance().PlaySound("explosion")
+
             if self.m_spawnPoint is not None:
                 self.m_spawnPoint.isLocked = False
 
@@ -103,4 +108,6 @@ class KamikazeScr(MonoScript, IDamagable):
             self.m_parent.Destroy()
 
     def Gizmo(self) -> None:
-        RenderSystem.GetInstance().DebugCircle(self.m_tr.m_worldPos, self.m_triggerRange, (255, 255, 0))
+        from pyre.systems import RenderSystem
+        
+        RenderSystem.GetInstance().DebugCircle(self.m_tr.m_worldPos, self.m_triggerRange, (255, 0, 0))

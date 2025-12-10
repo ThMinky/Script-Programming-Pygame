@@ -30,7 +30,7 @@ class EnemySpawnerScr(MonoScript):
         super().__init__()
 
         # Refs
-        self.m_scene: "Scene" | None = None
+        self.m_scene: "Scene" | None = None  # Auto assign
 
         # Timers
         self.m_basicEnemySpawnTimer: "Timer" | None = None
@@ -42,7 +42,7 @@ class EnemySpawnerScr(MonoScript):
         self.m_bossQueue: deque[tuple[str, str]] = deque()
 
     def Start(self) -> None:
-        self.m_basicEnemySpawnTimer = Timer(8)
+        self.m_basicEnemySpawnTimer = Timer(6)
         self.m_bossEnemySpawnTimer = Timer(30)
 
         self.m_spawns: list["Spawns"] = [
@@ -71,6 +71,9 @@ class EnemySpawnerScr(MonoScript):
     def OnDisable(self) -> None:
         pass
 
+    def Destroy(self):
+        super().Destroy()
+
     def SpawnBasicEnemy(self) -> None:
         freeSpawns = []
         for spawn in self.m_spawns:
@@ -83,7 +86,7 @@ class EnemySpawnerScr(MonoScript):
             self.m_scene.CreateGruntEnemy(randSpawn.spawnPos, randSpawn.spawnRot, randSpawn)
 
     def SpawnBossEnemy(self) -> None:
-        bossType = random.choice(["hellspot", "kamikaze"])
+        bossType = random.choice(["hellspot", "kamikaze"]) 
         requiredSpawnType: str
 
         if bossType == "hellspot":

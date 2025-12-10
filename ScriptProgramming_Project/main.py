@@ -1,52 +1,50 @@
 import os
+import sys
+import subprocess
 
-os.chdir(os.path.dirname(os.path.abspath(__file__)))
+import globals
 
-import pygame
 
-from pyre.display import Window
-from pyre.managers import InputManager, SystemManager
-from pyre.systems import RenderSystem, ScriptSystem
-from pyre.time import Time
+def showMenu():
+    print("\n")
 
-from scene import Scene
+    if globals.played_once:
+        if globals.won:
+            print("|-----------------|")
+            print("|    You Win!     |")
+            print("|-----------------|")
+            print("Do you want to beat them again? (y/n)")
+        else:
+            print("|-----------------|")
+            print("|    You Lose!    |")
+            print("|-----------------|")
+            print("Do you want to redeem yourself? (y/n)")
+    else:
+        print("|------------------------------|")
+        print("|  Do you want to play? (y/n)  |")
+        print("|------------------------------|")
 
-# ///////////////////////////////////////////////////////////////////////////
-# Init
-pygame.init()
 
-window = Window(width=1280, height=768, title="BlastField")
+def main():
+    baseDir = os.path.dirname(os.path.abspath(__file__))
+    launcherPath = os.path.join(baseDir, "game.py")
 
-inputMgr = InputManager().GetInstance()
-systemMgr = SystemManager.GetInstance()
+    while True:
+        showMenu()
 
-renderSys = systemMgr.GetSystemInstanceByType(RenderSystem)
-scriptSys = systemMgr.GetSystemInstanceByType(ScriptSystem)
+        choice = input("  > ").strip().lower()
 
-currentScene = Scene()
+        if choice == "y":
+            result = subprocess.run([sys.executable, launcherPath])
 
-# ///////////////////////////////////////////////////////////////////////////
+            globals.played_once = True
+            globals.won = result.returncode == 1
 
-running = True
-while running:
-    Time.Update()
+        elif choice == "n":
+            exit()
+        else:
+            print("Please choose y or n.")
 
-    inputMgr.Update()
 
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-
-    if InputManager.GetInstance().GetKeyDown(pygame.K_c):
-        renderSys.m_debugColliders = not renderSys.m_debugColliders
-
-    if InputManager.GetInstance().GetKeyDown(pygame.K_v):
-        renderSys.m_debugFPS = not renderSys.m_debugFPS
-
-    scriptSys.Update()
-
-    window.m_surface.fill((0, 0, 0))
-
-    renderSys.Render(window.m_surface)
-
-    pygame.display.flip()
+if __name__ == "__main__":
+    main()

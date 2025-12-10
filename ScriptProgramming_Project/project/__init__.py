@@ -22,10 +22,15 @@ from .tags import (
     BlockerTag,
 )
 
+from .ammo_box_scr import AmmoBoxScr
+
+from .blast_area_scr import BlastAreaScr
+
 from .enemy_spawner_scr import Spawns, EnemySpawnerScr
 
 from .projectile_scr import ProjectileScr
 
+from .ui_scr import UIScr
 
 __all__ = [
     "AutoTurretScr", "BaseScr",
@@ -34,6 +39,9 @@ __all__ = [
     "PlayerScr",
     "MoveBackwardCmd", "MoveForwardCmd", "RotateLeftCmd", "RotateRightCmd",
     "BlockerTag",
+    "AmmoBoxScr"
+    "BlastAreaScr",
     "Spawns", "EnemySpawnerScr",
     "ProjectileScr",
+    "UIScr",
 ]

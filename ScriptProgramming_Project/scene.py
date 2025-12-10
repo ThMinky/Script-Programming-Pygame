@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from enum import IntEnum
 
+import weakref
+
 import math
 import random
 
@@ -10,14 +12,17 @@ import pygame
 from pyre.components import Sprite, Transform
 from pyre.components.colliders import BoxCollider, LineCollider
 from pyre.entities import Entity
-from pyre.managers import SpriteManager
+from pyre.managers import SoundManager, SpriteManager
 
 from project.base import AutoTurretScr, BaseScr
 from project.enemies import GruntScr, HellspotScr, KamikazeScr
 from project.player.player_scr import PlayerScr
 from project.tags import BlockerTag
+from project.ammo_box_scr import AmmoBoxScr
+from project.blast_area_scr import BlastAreaScr
 from project.enemy_spawner_scr import Spawns, EnemySpawnerScr
 from project.projectile_scr import ProjectileScr
+from project.ui_scr import UIScr
 
 
 class ELayers(IntEnum):
@@ -25,7 +30,6 @@ class ELayers(IntEnum):
     DECOR = 1
     INTERACT = 2
     ENTITY = 3
-    UI = 4
 
 
 class Scene:
@@ -39,6 +43,13 @@ class Scene:
 
         self.m_enemySpawner: "Entity" | None = None
         self.m_enemies: list["Entity"] = []
+
+        self.m_projectiles: list["Entity"] = []
+        self.m_blastAreas: list["Entity"] = []
+
+        self.m_ammoBoxes: list["Entity"] = []
+
+        self.m_ui: "Entity" | None = None
 
         # Register Sprites
         # //////////////////////////////////////////////////
@@ -90,6 +101,20 @@ class Scene:
 
         SpriteManager.GetInstance().RegisterSprite("projectile", "resources/tanks/tank_projectile.png")
 
+        # Ammo Box
+        SpriteManager.GetInstance().RegisterSprite("ammoBox", "resources/autoTurret/ammo_box.png")
+
+        # //////////////////////////////////////////////////
+
+        # Register Sounds
+        # //////////////////////////////////////////////////
+
+        SoundManager.GetInstance().RegisterSound("explosion", "resources/sounds/explosion.wav")
+        SoundManager.GetInstance().RegisterSound("pickupAmmo", "resources/sounds/pickup_ammo.wav")
+        SoundManager.GetInstance().RegisterSound("projImpact", "resources/sounds/proj_impact.wav")
+        SoundManager.GetInstance().RegisterSound("tankFire", "resources/sounds/tank_fire.wav")
+        SoundManager.GetInstance().RegisterSound("turretFire", "resources/sounds/turret_fire.wav")
+
         # //////////////////////////////////////////////////
 
         self.m_mapTiles = self.CreateMap("map.txt", (64, 64))
@@ -100,6 +125,8 @@ class Scene:
         self.m_player = self.CreatePlayer(pygame.Vector2(450, 450))
 
         self.m_enemySpawner = self.CreateEnemySpawner()
+
+        self.m_ui = self.CreateUI()
 
     def CreateMap(self, path: str, tileSize: tuple[int, int]) -> list["Entity"]:
         self.tiles: list["Entity"] = []
@@ -213,6 +240,8 @@ class Scene:
         baseRoot.AddComponent(BoxCollider(size=pygame.Vector2(130, 130)))
         baseRoot.AddComponent(BaseScr())
         baseRoot.AddComponent(BlockerTag())
+
+        baseRoot.GetComponentByType(BaseScr).m_scene = self
 
         baseRootTransform = baseRoot.GetComponentByType(Transform)
 
@@ -421,7 +450,7 @@ class Scene:
 
         self.m_enemies.append(hull)
 
-    def CreateProjectile(self, dmg: int, speed: int, senderTransform: "Transform") -> None:
+    def CreateProjectile(self, dmg: float, speed: float, senderTransform: "Transform") -> None:
         projSpawnOffset = senderTransform.GetForwardVec() * 40
         projSpawnPoint = senderTransform.m_worldPos + projSpawnOffset
 
@@ -436,10 +465,53 @@ class Scene:
             )
         )
         projectile.AddComponent(LineCollider())
-        projectile.AddComponent(ProjectileScr(dmg=dmg, speed=speed, dir=senderTransform.GetForwardVec()))
+        projectile.AddComponent(
+            ProjectileScr(
+                dmg=dmg,
+                speed=speed,
+                dir=senderTransform.GetForwardVec(),
+            )
+        )
+
+        projectile.GetComponentByType(ProjectileScr).m_scene = self
+
+        self.m_projectiles.append(projectile)
 
     def CreateBlastArea(self, dmg: float, center: pygame.Vector2, radius: float, countdown: float) -> None:
-        pass
+        blastArea = Entity()
+        blastArea.AddComponent(
+            BlastAreaScr(
+                dmg=dmg,
+                center=center,
+                radius=radius,
+                countdown=countdown,
+            )
+        )
+
+        blastArea.GetComponentByType(BlastAreaScr).m_scene = self
+
+        self.m_blastAreas.append(blastArea)
+
+    def CreateAmmoBox(self, pos: pygame.Vector2) -> None:
+        ammoBox = Entity(localPos=pos)
+        ammoBox.AddComponent(
+            Sprite(
+                spriteKey="ammoBox",
+                layer=2,
+            )
+        )
+        ammoBox.AddComponent(BoxCollider())
+        ammoBox.AddComponent(AmmoBoxScr())
+
+        if self.m_baseRoot is not None:
+            baseScr = self.m_baseRoot.GetComponentByType(BaseScr)
+            ammoBox.GetComponentByType(AmmoBoxScr).m_baseScrRef = weakref.ref(baseScr)
+
+    def CreateUI(self) -> "Entity":
+        ui = Entity()
+        ui.AddComponent(UIScr())
+
+        return ui
 
     def _LoadMapFromFile(self, path) -> list[list[str]]:
         mapData: list[list[str]] = []

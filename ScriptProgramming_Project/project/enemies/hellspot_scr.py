@@ -5,7 +5,6 @@ import weakref
 
 from pyre.components import Transform
 from pyre.components.scripts import MonoScript
-from pyre.systems import RenderSystem
 from pyre.utils.math_utils import GetAngleFromDirVector
 from pyre.time import Time
 from pyre.timer import Timer
@@ -22,15 +21,15 @@ class HellspotScr(MonoScript, IDamagable):
         super().__init__()
 
         # Refs
-        self.m_scene: "Scene" | None = None # Auto assign
-        self.m_spawnPoint: "Spawns" | None = None # Auto assign
+        self.m_scene: "Scene" | None = None  # Auto assign
+        self.m_spawnPoint: "Spawns" | None = None  # Auto assign
 
         self.m_playerTrRef: weakref.ref["Transform"] | None = None
 
         # Caches
         self.m_tr: "Transform" | None = None
-        self.m_lazerLTr: "Transform" | None = None # Auto assign
-        self.m_lazerRTr: "Transform" | None = None # Auto assign
+        self.m_lazerLTr: "Transform" | None = None  # Auto assign
+        self.m_lazerRTr: "Transform" | None = None  # Auto assign
 
         # Timers
         self.m_lockDuration: float = 3
@@ -43,7 +42,7 @@ class HellspotScr(MonoScript, IDamagable):
         self.m_hp: float = 6
         self.m_moveSpeed: float = 15
 
-        self.m_blastDmg: float = 10
+        self.m_blastDmg: float = 100
         self.m_blastRadius: float = 75
         self.m_timeToImpact: float = 4
 
@@ -71,6 +70,9 @@ class HellspotScr(MonoScript, IDamagable):
 
     def OnDisable(self) -> None:
         pass
+
+    def Destroy(self) -> None:
+        super().Destroy()
 
     def LockTarget(self) -> None:
         if self.m_playerTrRef is None:
@@ -120,7 +122,6 @@ class HellspotScr(MonoScript, IDamagable):
         self.m_hp -= amount
 
         if self.m_hp <= 0:
-
             if self.m_spawnPoint is not None:
                 self.m_spawnPoint.isLocked = False
 
@@ -130,6 +131,8 @@ class HellspotScr(MonoScript, IDamagable):
             self.m_parent.Destroy()
 
     def Gizmo(self) -> None:
+        from pyre.systems import RenderSystem
+        
         if self.m_playerTrRef is None:
             return
 

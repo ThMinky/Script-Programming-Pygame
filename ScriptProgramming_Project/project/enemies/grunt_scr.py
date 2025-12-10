@@ -3,9 +3,13 @@ from typing import TYPE_CHECKING
 
 import weakref
 
+import random
+
+import pygame
+
 from pyre.components import Transform
 from pyre.components.scripts import MonoScript
-from pyre.systems import RenderSystem
+from pyre.managers import SoundManager
 from pyre.utils.math_utils import GetAngleFromDirVector
 from pyre.time import Time
 from pyre.timer import Timer
@@ -22,8 +26,8 @@ class GruntScr(MonoScript, IDamagable):
         super().__init__()
 
         # Refs
-        self.m_scene: "Scene" | None = None # Auto assign
-        self.m_spawnPoint: "Spawns" | None = None # Auto assign
+        self.m_scene: "Scene" | None = None  # Auto assign
+        self.m_spawnPoint: "Spawns" | None = None  # Auto assign
 
         self.m_baseTrRef: weakref.ref["Transform"] | None = None
         self.m_playerTrRef: weakref.ref["Transform"] | None = None
@@ -31,7 +35,7 @@ class GruntScr(MonoScript, IDamagable):
 
         # Caches
         self.m_tr: "Transform" | None = None
-        self.m_barrelTr: "Transform" | None = None # Auto assign
+        self.m_barrelTr: "Transform" | None = None  # Auto assign
 
         # Timers
         self.m_lockDuration: float = 1.5
@@ -71,16 +75,24 @@ class GruntScr(MonoScript, IDamagable):
                 self.LockTarget()
                 return
 
+        self.m_barrelTr.SetRotation(0)
+        self.m_currentTargetTrRef = None
         self.MoveTowardsBase()
         self.m_lockTimer.Reset()
 
-    def Enable(self) -> None:
+    def OnEnable(self) -> None:
         pass
 
-    def Disable(self) -> None:
+    def OnDisable(self) -> None:
         pass
+
+    def Destroy(self) -> None:
+        super().Destroy()
 
     def GetClosestTarget(self) -> None:
+        if self.m_tr.m_worldPos.x < 0 or self.m_tr.m_worldPos.x > 1280 or self.m_tr.m_worldPos.y < 0 or self.m_tr.m_worldPos.y > 768:
+            return
+        
         if self.m_currentTargetTrRef is not None:
             return
 
@@ -120,12 +132,10 @@ class GruntScr(MonoScript, IDamagable):
 
     def RotateBarrel(self) -> None:
         if self.m_currentTargetTrRef is None:
-            self.m_barrelTr.SetRotation(0)
             return
 
         if self.m_currentTargetTrRef() is None:
             self.m_currentTargetTrRef = None
-            self.m_barrelTr.SetRotation(0)
             return
 
         dirVec = (self.m_currentTargetTrRef().m_worldPos - self.m_tr.m_worldPos).normalize()
@@ -133,6 +143,8 @@ class GruntScr(MonoScript, IDamagable):
         self.m_barrelTr.SetRotation(rot - self.m_tr.m_worldRot)
 
     def Shoot(self) -> None:
+        SoundManager.GetInstance().PlaySound("tankFire")
+
         self.m_scene.CreateProjectile(self.m_projDmg, self.m_projSpeed, self.m_barrelTr)
 
     def MoveTowardsBase(self) -> None:
@@ -152,6 +164,10 @@ class GruntScr(MonoScript, IDamagable):
 
         if self.m_hp <= 0:
 
+            chance = random.random()
+            if chance <= 0.5:
+                self.m_scene.CreateAmmoBox(self.m_tr.m_worldPos)
+
             if self.m_spawnPoint is not None:
                 self.m_spawnPoint.isLocked = False
 
@@ -161,6 +177,8 @@ class GruntScr(MonoScript, IDamagable):
             self.m_parent.Destroy()
 
     def Gizmo(self) -> None:
+        from pyre.systems import RenderSystem
+
         if self.m_currentTargetTrRef is None:
             return
 

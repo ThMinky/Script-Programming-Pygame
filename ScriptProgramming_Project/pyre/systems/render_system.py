@@ -5,6 +5,8 @@ import pygame
 
 from pyre.systems import BaseSystem
 
+from project.ui_scr import UIScr
+
 if TYPE_CHECKING:
     from pyre.components import BaseComponent, Sprite, Transform
 
@@ -28,6 +30,9 @@ class RenderSystem(BaseSystem):
 
             # Enemy Marking
             self.m_debugDrawQueue: list[tuple] = []
+
+            # UI
+            self.m_uiScr: "UIScr" | None = None
 
     @staticmethod
     def GetInstance() -> "RenderSystem":
@@ -88,6 +93,9 @@ class RenderSystem(BaseSystem):
 
         self.m_debugDrawQueue.clear()
 
+        # UI
+        self.DrawUI(surface)
+
     def _FlushChanges(self) -> None:
         self.m_sprites.extend(self._m_to_add)
         self._m_to_add.clear()
@@ -145,3 +153,45 @@ class RenderSystem(BaseSystem):
 
     def DebugCircle(self, center, radius, color=(255, 0, 0), width=1):
         self.m_debugDrawQueue.append(("circle", center, radius, color, width))
+
+    # UI
+    def DrawUI(self, surface):
+        if not self.m_uiScr:
+            return
+
+        font = pygame.font.SysFont(None, 24)
+
+        pHp = self.m_uiScr.m_playerHp
+        pAmmo = self.m_uiScr.m_playerAmmo
+        bHp = self.m_uiScr.m_baseHp
+        bAmmo = self.m_uiScr.m_baseAmmo
+
+        y = 5
+        pHpX = 350
+        pAmmoX = 450
+        clockX = 640
+        bHpX = 830
+        bAmmoX = 930
+
+        # Player HP
+        pHpSurf = font.render(f"HP: {pHp}", True, (255, 0, 0))
+        surface.blit(pHpSurf, (pHpX, y))
+
+        # Player Ammo
+        pAmmoSurf = font.render(f"Ammo: {pAmmo}", True, (0, 0, 255))
+        surface.blit(pAmmoSurf, (pAmmoX, y))
+
+        # TIMER
+        t = int(self.m_uiScr.m_timer_current)
+        minutes = t // 60
+        seconds = t % 60
+        timerSurf = font.render(f"{minutes:02d}:{seconds:02d}", True, (255, 255, 0))
+        surface.blit(timerSurf, (clockX - timerSurf.get_width() // 2, y))
+
+        # Base HP
+        bHpSurf = font.render(f"HP: {bHp}", True, (255, 0, 0))
+        surface.blit(bHpSurf, (bHpX, y))
+
+        # Base Ammo
+        bAmmoSurf = font.render(f"Ammo: {bAmmo}", True, (0, 0, 255))
+        surface.blit(bAmmoSurf, (bAmmoX, y))
