@@ -1,88 +1,12 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\Users\\thrac\\source\\repos\\ScriptProgramming_Project\\",
-  "Documents": [
-    {
-      "AbsoluteMoniker": "D:0:0:{067850B2-6B4A-4B2E-94D9-D2043355EE31}|ScriptProgramming_Project\\ScriptProgramming_Project.pyproj|C:\\Users\\thrac\\source\\repos\\ScriptProgramming_Project\\ScriptProgramming_Project\\project\\enemies\\basic_enemy.py||{8B382828-6202-11D1-8870-0000F87579D2}",
-      "RelativeMoniker": "D:0:0:{067850B2-6B4A-4B2E-94D9-D2043355EE31}|ScriptProgramming_Project\\ScriptProgramming_Project.pyproj|solutionrelative:ScriptProgramming_Project\\project\\enemies\\basic_enemy.py||{8B382828-6202-11D1-8870-0000F87579D2}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{067850B2-6B4A-4B2E-94D9-D2043355EE31}|ScriptProgramming_Project\\ScriptProgramming_Project.pyproj|C:\\Users\\thrac\\source\\repos\\ScriptProgramming_Project\\ScriptProgramming_Project\\project\\enemies\\enemy_spawner.py||{8B382828-6202-11D1-8870-0000F87579D2}",
-      "RelativeMoniker": "D:0:0:{067850B2-6B4A-4B2E-94D9-D2043355EE31}|ScriptProgramming_Project\\ScriptProgramming_Project.pyproj|solutionrelative:ScriptProgramming_Project\\project\\enemies\\enemy_spawner.py||{8B382828-6202-11D1-8870-0000F87579D2}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{067850B2-6B4A-4B2E-94D9-D2043355EE31}|ScriptProgramming_Project\\ScriptProgramming_Project.pyproj|C:\\Users\\thrac\\source\\repos\\ScriptProgramming_Project\\ScriptProgramming_Project\\pyre\\utils\\math_utils.py||{8B382828-6202-11D1-8870-0000F87579D2}",
-      "RelativeMoniker": "D:0:0:{067850B2-6B4A-4B2E-94D9-D2043355EE31}|ScriptProgramming_Project\\ScriptProgramming_Project.pyproj|solutionrelative:ScriptProgramming_Project\\pyre\\utils\\math_utils.py||{8B382828-6202-11D1-8870-0000F87579D2}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{067850B2-6B4A-4B2E-94D9-D2043355EE31}|ScriptProgramming_Project\\ScriptProgramming_Project.pyproj|C:\\Users\\thrac\\source\\repos\\ScriptProgramming_Project\\ScriptProgramming_Project\\scene.py||{8B382828-6202-11D1-8870-0000F87579D2}",
-      "RelativeMoniker": "D:0:0:{067850B2-6B4A-4B2E-94D9-D2043355EE31}|ScriptProgramming_Project\\ScriptProgramming_Project.pyproj|solutionrelative:ScriptProgramming_Project\\scene.py||{8B382828-6202-11D1-8870-0000F87579D2}"
-    }
-  ],
+  "Documents": [],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
       "VerticalTabListWidth": 256,
-      "DocumentGroups": [
-        {
-          "DockedWidth": 288,
-          "SelectedChildIndex": 2,
-          "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "math_utils.py",
-              "DocumentMoniker": "C:\\Users\\thrac\\source\\repos\\ScriptProgramming_Project\\ScriptProgramming_Project\\pyre\\utils\\math_utils.py",
-              "RelativeDocumentMoniker": "ScriptProgramming_Project\\pyre\\utils\\math_utils.py",
-              "ToolTip": "C:\\Users\\thrac\\source\\repos\\ScriptProgramming_Project\\ScriptProgramming_Project\\pyre\\utils\\math_utils.py",
-              "RelativeToolTip": "ScriptProgramming_Project\\pyre\\utils\\math_utils.py",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002457|",
-              "WhenOpened": "2025-12-08T16:06:53.989Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "enemy_spawner.py",
-              "DocumentMoniker": "C:\\Users\\thrac\\source\\repos\\ScriptProgramming_Project\\ScriptProgramming_Project\\project\\enemies\\enemy_spawner.py",
-              "RelativeDocumentMoniker": "ScriptProgramming_Project\\project\\enemies\\enemy_spawner.py",
-              "ToolTip": "C:\\Users\\thrac\\source\\repos\\ScriptProgramming_Project\\ScriptProgramming_Project\\project\\enemies\\enemy_spawner.py",
-              "RelativeToolTip": "ScriptProgramming_Project\\project\\enemies\\enemy_spawner.py",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAAADIAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002457|",
-              "WhenOpened": "2025-12-08T15:39:53.288Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "basic_enemy.py",
-              "DocumentMoniker": "C:\\Users\\thrac\\source\\repos\\ScriptProgramming_Project\\ScriptProgramming_Project\\project\\enemies\\basic_enemy.py",
-              "RelativeDocumentMoniker": "ScriptProgramming_Project\\project\\enemies\\basic_enemy.py",
-              "ToolTip": "C:\\Users\\thrac\\source\\repos\\ScriptProgramming_Project\\ScriptProgramming_Project\\project\\enemies\\basic_enemy.py",
-              "RelativeToolTip": "ScriptProgramming_Project\\project\\enemies\\basic_enemy.py",
-              "ViewState": "AgIAAGYAAAAAAAAAAAAAAHkAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002457|",
-              "WhenOpened": "2025-12-08T15:36:27.258Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "scene.py",
-              "DocumentMoniker": "C:\\Users\\thrac\\source\\repos\\ScriptProgramming_Project\\ScriptProgramming_Project\\scene.py",
-              "RelativeDocumentMoniker": "ScriptProgramming_Project\\scene.py",
-              "ToolTip": "C:\\Users\\thrac\\source\\repos\\ScriptProgramming_Project\\ScriptProgramming_Project\\scene.py",
-              "RelativeToolTip": "ScriptProgramming_Project\\scene.py",
-              "ViewState": "AgIAAF0AAAAAAAAAAAAAAGMAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002457|",
-              "WhenOpened": "2025-12-08T13:21:11.512Z",
-              "EditorCaption": ""
-            }
-          ]
-        }
-      ]
+      "DocumentGroups": []
     }
   ]
 }

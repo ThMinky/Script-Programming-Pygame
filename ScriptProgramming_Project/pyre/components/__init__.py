@@ -4,5 +4,7 @@ from .transform import Transform
 
 
 __all__ = [
-    "BaseComponent", "Sprite", "Transform",
+    "BaseComponent",
+    "Sprite",
+    "Transform",
 ]

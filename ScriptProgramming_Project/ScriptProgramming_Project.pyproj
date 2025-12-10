@@ -21,31 +21,30 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="project\base.py" />
-    <Compile Include="project\blocker.py" />
-    <Compile Include="project\debug\__init__.py" />
-    <Compile Include="project\enemies\basic_enemy.py" />
-    <Compile Include="project\enemies\boss_tag.py" />
-    <Compile Include="project\enemies\hellspot_enemy.py" />
-    <Compile Include="project\enemies\kamikaze_enemy.py" />
+    <Compile Include="project\base\auto_turret_scr.py" />
+    <Compile Include="project\base\base_scr.py" />
+    <Compile Include="project\base\__init__.py" />
+    <Compile Include="project\tags\blocker_tag.py" />
+    <Compile Include="project\enemies\grunt_scr.py" />
+    <Compile Include="project\enemies\hellspot_scr.py" />
+    <Compile Include="project\enemies\kamikaze_scr.py" />
     <Compile Include="project\enemies\__init__.py" />
-    <Compile Include="project\enemies\enemy_spawner.py" />
-    <Compile Include="project\interfaces\IDamagable.py" />
+    <Compile Include="project\enemy_spawner_scr.py" />
+    <Compile Include="project\interfaces\i_damagable.py" />
     <Compile Include="project\interfaces\__init__.py" />
-    <Compile Include="project\player\player_script.py" />
-    <Compile Include="project\player\move_commands\__init__.py" />
+    <Compile Include="project\player\player_scr.py" />
+    <Compile Include="project\player\move_cmds\__init__.py" />
     <Compile Include="project\player\__init__.py" />
-    <Compile Include="project\projectile.py" />
+    <Compile Include="project\projectile_scr.py" />
+    <Compile Include="project\tags\__init__.py" />
     <Compile Include="project\__init__.py" />
     <Compile Include="main.py" />
-    <Compile Include="project\debug\toggle_fps_debug.py" />
-    <Compile Include="pyre\components\scripts\base_script.py" />
+    <Compile Include="pyre\components\scripts\mono_script.py" />
     <Compile Include="pyre\command.py" />
-    <Compile Include="project\player\move_commands\move_backward.py" />
-    <Compile Include="project\player\move_commands\move_forward.py" />
-    <Compile Include="project\player\move_commands\rotate_left.py" />
-    <Compile Include="project\player\move_commands\rotate_right.py" />
-    <Compile Include="project\debug\toggle_colliders_debug.py" />
+    <Compile Include="project\player\move_cmds\move_backward_cmd.py" />
+    <Compile Include="project\player\move_cmds\move_forward_cmd.py" />
+    <Compile Include="project\player\move_cmds\rotate_left_cmd.py" />
+    <Compile Include="project\player\move_cmds\rotate_right_cmd.py" />
     <Compile Include="pyre\components\colliders\base_collider.py" />
     <Compile Include="pyre\components\colliders\point_collider.py" />
     <Compile Include="pyre\components\colliders\line_collider.py" />
@@ -83,11 +82,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="project\" />
-    <Folder Include="project\debug\" />
     <Folder Include="project\interfaces\" />
     <Folder Include="project\enemies\" />
+    <Folder Include="project\base\" />
+    <Folder Include="project\tags\" />
     <Folder Include="project\player\" />
-    <Folder Include="project\player\move_commands\" />
+    <Folder Include="project\player\move_cmds\" />
     <Folder Include="pyre\" />
     <Folder Include="pyre\components\" />
     <Folder Include="pyre\components\colliders\" />

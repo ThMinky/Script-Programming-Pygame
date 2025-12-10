@@ -2,12 +2,12 @@ from .components import (
     BaseComponent, Sprite, Transform,
 )
 
-from .components.scripts import (
-    BaseScript,  
-)
-
 from .components.colliders import (
     BaseCollider, BoxCollider, CircleCollider, LineCollider, PointCollider,
+)
+
+from .components.scripts import (
+    MonoScript,  
 )
 
 from .display import (
@@ -48,8 +48,8 @@ from .timer import Timer
 
 __all__ = [
     "BaseComponent", "Sprite", "Transform",
-    "BaseScript",
     "BaseCollider", "BoxCollider", "CircleCollider", "LineCollider", "PointCollider",
+    "MonoScript",
     "Window",
     "Entity",
     "Event",

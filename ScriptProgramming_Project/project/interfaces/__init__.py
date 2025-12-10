@@ -1,4 +1,4 @@
-from project.interfaces.IDamagable import IDamagable
+from project.interfaces.i_damagable import IDamagable
 
 
 __all__ = [

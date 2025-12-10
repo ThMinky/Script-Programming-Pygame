@@ -5,5 +5,8 @@ from .script_system import ScriptSystem
 
 
 __all__ = [
-    "BaseSystem", "CollisionSystem", "RenderSystem", "ScriptSystem",
+    "BaseSystem",
+    "CollisionSystem",
+    "RenderSystem",
+    "ScriptSystem",
 ]

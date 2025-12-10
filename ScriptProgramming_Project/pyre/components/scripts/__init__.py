@@ -1,6 +1,6 @@
-from .base_script import BaseScript
+from .mono_script import MonoScript
 
 
 __all__ = [
-    "BaseScript",
+    "MonoScript",
 ]

@@ -1,10 +1,10 @@
-from .basic_enemy import BasicEnemy
-from .boss_tag import BossTag
-from .enemy_spawner import EnemySpawner
-from .hellspot_enemy import HellspotEnemy
-from .kamikaze_enemy import KamikazeEnemy
+from .grunt_scr import GruntScr
+from .hellspot_scr import HellspotScr
+from .kamikaze_scr import KamikazeScr
 
 
 __all__ = [
-    "BasicEnemy", "BossTag", "EnemySpawner", "HellspotEnemy", "KamikazeEnemy",
+    "GruntScr",
+    "HellspotScr",
+    "KamikazeScr",
 ]

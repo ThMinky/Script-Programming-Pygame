@@ -6,7 +6,7 @@ from .collision_utils import (
 )
 
 from .math_utils import (
-    GetAngleFromDirVector ,RotatePointAroundPivot,
+    GetAngleFromDirVector, RotatePointAroundPivot,
 )
 
 from .rect_utils import (

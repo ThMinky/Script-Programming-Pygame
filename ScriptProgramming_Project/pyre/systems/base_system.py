@@ -1,7 +1,7 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
-from abc import ABC, abstractmethod
 
+from abc import ABC, abstractmethod
 
 if TYPE_CHECKING:
     from pyre.components import BaseComponent

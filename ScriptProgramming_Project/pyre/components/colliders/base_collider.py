@@ -1,5 +1,6 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
+
 from abc import ABC, abstractmethod
 
 import pygame
@@ -36,6 +37,9 @@ class BaseCollider(BaseComponent, ABC):
             raise RuntimeError("Component without Transform found!")
 
     def _Uninit(self) -> None:
+        self.m_sprite = None
+        self.m_transform = None
+
         super()._Uninit()
 
     def Enable(self) -> None:

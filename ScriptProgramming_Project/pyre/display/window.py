@@ -24,12 +24,14 @@ class Window:
 
             self.m_surface = None
 
+            self._Init()
+
     @staticmethod
     def GetInstance() -> "Window":
         if Window.__instance is None:
             Window()
         return Window.__instance
 
-    def Init(self) -> None:
+    def _Init(self) -> None:
         self.m_surface = pygame.display.set_mode((self.m_width, self.m_height))
         pygame.display.set_caption(self.m_title)

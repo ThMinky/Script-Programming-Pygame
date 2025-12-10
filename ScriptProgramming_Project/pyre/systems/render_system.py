@@ -84,7 +84,7 @@ class RenderSystem(BaseSystem):
                 pygame.draw.line(surface, color, start, end, width)
             elif item[0] == "circle":
                 _, center, radius, color, width = item
-                pygame.draw.circle(surface, color, radius, width)
+                pygame.draw.circle(surface, color, center, radius, width)
 
         self.m_debugDrawQueue.clear()
 

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from enum import IntEnum
 
 import math
@@ -5,18 +7,17 @@ import random
 
 import pygame
 
-# Engine
 from pyre.components import Sprite, Transform
 from pyre.components.colliders import BoxCollider, LineCollider
 from pyre.entities import Entity
 from pyre.managers import SpriteManager
 
-# Project
-from project.enemies import BasicEnemy, BossTag, EnemySpawner, HellspotEnemy, KamikazeEnemy
-from project.player.player_script import PlayerScript
-from project import Base
-from project import Blocker
-from project import Projectile
+from project.base import AutoTurretScr, BaseScr
+from project.enemies import GruntScr, HellspotScr, KamikazeScr
+from project.player.player_scr import PlayerScr
+from project.tags import BlockerTag
+from project.enemy_spawner_scr import Spawns, EnemySpawnerScr
+from project.projectile_scr import ProjectileScr
 
 
 class ELayers(IntEnum):
@@ -65,7 +66,7 @@ class Scene:
         SpriteManager.GetInstance().RegisterSprite("sandbag", "resources/decor/sandbag.png")
 
         SpriteManager.GetInstance().RegisterSprite("explodeBarrelTop", "resources/decor/explode_barrel_top.png")
-        SpriteManager.GetInstance().RegisterSprite("explodeBarrelSize", "resources/decor/explode_barrel_side.png")
+        SpriteManager.GetInstance().RegisterSprite("explodeBarrelSide", "resources/decor/explode_barrel_side.png")
 
         # Base
         SpriteManager.GetInstance().RegisterSprite("autoTurretHead", "resources/autoTurret/auto_turret_head.png")
@@ -82,8 +83,10 @@ class Scene:
         SpriteManager.GetInstance().RegisterSprite("darkTankBarrel", "resources/tanks/tank_barrel_dark.png")
 
         SpriteManager.GetInstance().RegisterSprite("hellspot", "resources/tanks/tank_hull_hellspot.png")
+        SpriteManager.GetInstance().RegisterSprite("lazerL", "resources/tanks/tank_lazer_left.png")
+        SpriteManager.GetInstance().RegisterSprite("lazerR", "resources/tanks/tank_lazer_right.png")
 
-        SpriteManager.GetInstance().RegisterSprite("hellspot", "resources/tanks/tank_hull_kamikaze.png")
+        SpriteManager.GetInstance().RegisterSprite("kamikaze", "resources/tanks/tank_hull_kamikaze.png")
 
         SpriteManager.GetInstance().RegisterSprite("projectile", "resources/tanks/tank_projectile.png")
 
@@ -95,8 +98,6 @@ class Scene:
 
         self.m_baseRoot = self.CreateBase(pygame.Vector2(640, 384))
         self.m_player = self.CreatePlayer(pygame.Vector2(450, 450))
-
-        # self.CreateBasicEnemy(pygame.Vector2(1280, 384), 90)
 
         self.m_enemySpawner = self.CreateEnemySpawner()
 
@@ -127,22 +128,22 @@ class Scene:
 
         topBound = Entity(localPos=pygame.Vector2(mapWidth / 2, (thickness / 2) - 10))
         topBound.AddComponent(BoxCollider(size=pygame.Vector2(mapWidth, thickness)))
-        topBound.AddComponent(Blocker())
+        topBound.AddComponent(BlockerTag())
         bounds.append(topBound)
 
         leftBound = Entity(localPos=pygame.Vector2((thickness / 2) - 10, mapHeight / 2))
         leftBound.AddComponent(BoxCollider(size=pygame.Vector2(thickness, mapHeight)))
-        leftBound.AddComponent(Blocker())
+        leftBound.AddComponent(BlockerTag())
         bounds.append(leftBound)
 
         bottomBound = Entity(localPos=pygame.Vector2(mapWidth / 2, (mapHeight - thickness / 2) + 9))
         bottomBound.AddComponent(BoxCollider(size=pygame.Vector2(mapWidth, thickness)))
-        bottomBound.AddComponent(Blocker())
+        bottomBound.AddComponent(BlockerTag())
         bounds.append(bottomBound)
 
         rightBound = Entity(localPos=pygame.Vector2((mapWidth - thickness / 2) + 9, mapHeight / 2))
         rightBound.AddComponent(BoxCollider(size=pygame.Vector2(thickness, mapHeight)))
-        rightBound.AddComponent(Blocker())
+        rightBound.AddComponent(BlockerTag())
         bounds.append(rightBound)
 
         return bounds
@@ -210,8 +211,8 @@ class Scene:
     def CreateBase(self, center: pygame.Vector2) -> "Entity":
         baseRoot = Entity(localPos=center)
         baseRoot.AddComponent(BoxCollider(size=pygame.Vector2(130, 130)))
-        baseRoot.AddComponent(Base())
-        baseRoot.AddComponent(Blocker())
+        baseRoot.AddComponent(BaseScr())
+        baseRoot.AddComponent(BlockerTag())
 
         baseRootTransform = baseRoot.GetComponentByType(Transform)
 
@@ -276,6 +277,10 @@ class Scene:
 
             turretHead = Entity(parentTransform=turretStand.GetComponentByType(Transform))
             turretHead.AddComponent(Sprite(spriteKey="autoTurretHead"))
+            turretHead.AddComponent(AutoTurretScr())
+
+            turretHead.GetComponentByType(AutoTurretScr).m_baseScr = baseRoot.GetComponentByType(BaseScr)
+            turretHead.GetComponentByType(AutoTurretScr).m_scene = self
 
         for pos, rot in sandbagOffsets:
             sandbag = Entity(
@@ -301,7 +306,7 @@ class Scene:
             )
         )
         hull.AddComponent(BoxCollider())
-        hull.AddComponent(PlayerScript())
+        hull.AddComponent(PlayerScr())
 
         barrel = Entity(
             localPos=pygame.Vector2(0, -5),
@@ -309,20 +314,20 @@ class Scene:
         )
         barrel.AddComponent(Sprite(spriteKey="sandTankBarrel"))
 
-        hull.GetComponentByType(PlayerScript).m_barrel = barrel
-        hull.GetComponentByType(PlayerScript).m_scene = self
+        hull.GetComponentByType(PlayerScr).m_barrel = barrel
+        hull.GetComponentByType(PlayerScr).m_scene = self
 
         return hull
 
     def CreateEnemySpawner(self) -> "Entity":
         enemySpawner = Entity()
-        enemySpawner.AddComponent(EnemySpawner())
+        enemySpawner.AddComponent(EnemySpawnerScr())
 
-        enemySpawner.GetComponentByType(EnemySpawner).m_scene = self
+        enemySpawner.GetComponentByType(EnemySpawnerScr).m_scene = self
 
         return enemySpawner
 
-    def CreateBasicEnemy(self, pos: pygame.Vector2, rot: float) -> None:
+    def CreateGruntEnemy(self, pos: pygame.Vector2, rot: float, spawnRef: "Spawns" | None = None) -> None:
         hull = Entity(
             localPos=pos,
             localRot=rot,
@@ -334,8 +339,8 @@ class Scene:
             )
         )
         hull.AddComponent(BoxCollider())
-        hull.AddComponent(BasicEnemy())
-        hull.AddComponent(Blocker())
+        hull.AddComponent(GruntScr())
+        hull.AddComponent(BlockerTag())
 
         barrel = Entity(
             localPos=pygame.Vector2(0, -5),
@@ -343,14 +348,13 @@ class Scene:
         )
         barrel.AddComponent(Sprite(spriteKey="darkTankBarrel"))
 
-        hull.GetComponentByType(BasicEnemy).m_barrelTransform = barrel.GetComponentByType(Transform)
-        hull.GetComponentByType(BasicEnemy).m_scene = self
+        hull.GetComponentByType(GruntScr).m_scene = self
+        hull.GetComponentByType(GruntScr).m_spawnPoint = spawnRef
+        hull.GetComponentByType(GruntScr).m_barrelTr = barrel.GetComponentByType(Transform)
 
         self.m_enemies.append(hull)
 
-        return hull
-
-    def CreateHellspotEnemy(self, pos: pygame.Vector2, rot: float) -> None:
+    def CreateHellspotEnemy(self, pos: pygame.Vector2, rot: float, spawnRef: "Spawns" | None = None) -> None:
         hull = Entity(
             localPos=pos,
             localRot=rot,
@@ -361,40 +365,63 @@ class Scene:
                 layer=ELayers.ENTITY,
             )
         )
-        hull.AddComponent(BoxCollider())
-        hull.AddComponent(HellspotEnemy())
-        hull.AddComponent(BossTag())
-        hull.AddComponent(Blocker())
+        hull.AddComponent(BoxCollider(size=pygame.Vector2(50, 54)))
+        hull.AddComponent(HellspotScr())
+        hull.AddComponent(BlockerTag())
 
-        hull.GetComponentByType(HellspotEnemy).m_scene = self
+        lazerL = Entity(
+            localPos=pygame.Vector2(10, 0),
+            parentTransform=hull.GetComponentByType(Transform),
+        )
+        lazerL.AddComponent(Sprite(spriteKey="lazerL"))
+
+        lazerR = Entity(
+            localPos=pygame.Vector2(-10, 0),
+            parentTransform=hull.GetComponentByType(Transform),
+        )
+        lazerR.AddComponent(Sprite(spriteKey="lazerR"))
+
+        hull.GetComponentByType(HellspotScr).m_scene = self
+        hull.GetComponentByType(HellspotScr).m_spawnPoint = spawnRef
+        hull.GetComponentByType(HellspotScr).m_lazerLTr = lazerL.GetComponentByType(Transform)
+        hull.GetComponentByType(HellspotScr).m_lazerRTr = lazerR.GetComponentByType(Transform)
 
         self.m_enemies.append(hull)
 
-        return hull
-
-    def CreateKamikazeEnemy(self, pos: pygame.Vector2, rot: float) -> None:
+    def CreateKamikazeEnemy(self, pos: pygame.Vector2, rot: float, spawnRef: "Spawns" | None = None) -> None:
         hull = Entity(
             localPos=pos,
             localRot=rot,
         )
         hull.AddComponent(
             Sprite(
-                spriteKey="darkTankHull",
+                spriteKey="kamikaze",
                 layer=ELayers.ENTITY,
             )
         )
         hull.AddComponent(BoxCollider())
-        hull.AddComponent(KamikazeEnemy())
-        hull.AddComponent(BossTag())
-        hull.AddComponent(Blocker())
+        hull.AddComponent(KamikazeScr())
+        hull.AddComponent(BlockerTag())
 
-        hull.GetComponentByType(KamikazeEnemy).m_scene = self
+        explodeBarrelTop = Entity(
+            localPos=pygame.Vector2(0, -15),
+            parentTransform=hull.GetComponentByType(Transform),
+        )
+        explodeBarrelTop.AddComponent(Sprite(spriteKey="explodeBarrelTop"))
+
+        explodeBarrelSide = Entity(
+            localPos=pygame.Vector2(0, 15),
+            localRot=90,
+            parentTransform=hull.GetComponentByType(Transform),
+        )
+        explodeBarrelSide.AddComponent(Sprite(spriteKey="explodeBarrelSide"))
+
+        hull.GetComponentByType(KamikazeScr).m_scene = self
+        hull.GetComponentByType(KamikazeScr).m_spawnPoint = spawnRef
 
         self.m_enemies.append(hull)
 
-        return hull
-
-    def CreateProjectile(self, dmg: int, speed: int, senderTransform: "Transform"):
+    def CreateProjectile(self, dmg: int, speed: int, senderTransform: "Transform") -> None:
         projSpawnOffset = senderTransform.GetForwardVec() * 40
         projSpawnPoint = senderTransform.m_worldPos + projSpawnOffset
 
@@ -409,7 +436,10 @@ class Scene:
             )
         )
         projectile.AddComponent(LineCollider())
-        projectile.AddComponent(Projectile(dmg, speed, senderTransform.GetForwardVec()))
+        projectile.AddComponent(ProjectileScr(dmg=dmg, speed=speed, dir=senderTransform.GetForwardVec()))
+
+    def CreateBlastArea(self, dmg: float, center: pygame.Vector2, radius: float, countdown: float) -> None:
+        pass
 
     def _LoadMapFromFile(self, path) -> list[list[str]]:
         mapData: list[list[str]] = []

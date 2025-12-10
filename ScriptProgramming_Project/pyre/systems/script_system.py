@@ -2,7 +2,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from pyre.components.scripts import BaseScript
+    from pyre.components.scripts import MonoScript
 
 
 class ScriptSystem:
@@ -15,10 +15,10 @@ class ScriptSystem:
 
     def __init__(self) -> None:
         if not hasattr(self, "_m_scripts"):
-            self._m_scripts: list["BaseScript"] = []
-            self._m_to_add: list["BaseScript"] = []
-            self._m_to_remove: list["BaseScript"] = []
-            self._m_pending_starts: list["BaseScript"] = []
+            self._m_scripts: list["MonoScript"] = []
+            self._m_to_add: list["MonoScript"] = []
+            self._m_to_remove: list["MonoScript"] = []
+            self._m_pending_starts: list["MonoScript"] = []
 
     @staticmethod
     def GetInstance() -> "ScriptSystem":
@@ -26,18 +26,18 @@ class ScriptSystem:
             ScriptSystem()
         return ScriptSystem.__instance
 
-    def Register(self, script: "BaseScript") -> None:
-        from pyre.components.scripts import BaseScript
+    def Register(self, script: "MonoScript") -> None:
+        from pyre.components.scripts import MonoScript
 
-        if isinstance(script, BaseScript):
+        if isinstance(script, MonoScript):
             if script not in self._m_to_add:
                 if script not in self._m_scripts:
                     self._m_to_add.append(script)
 
-    def Unregister(self, script: "BaseScript") -> None:
-        from pyre.components.scripts import BaseScript
+    def Unregister(self, script: "MonoScript") -> None:
+        from pyre.components.scripts import MonoScript
 
-        if isinstance(script, BaseScript):
+        if isinstance(script, MonoScript):
             if script not in self._m_to_remove:
                 self._m_to_remove.append(script)
 

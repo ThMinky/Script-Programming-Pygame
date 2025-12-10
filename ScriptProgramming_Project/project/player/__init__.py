@@ -1,6 +1,6 @@
-from .player_script import PlayerScript
+from .player_scr import PlayerScr
 
 
 __all__ = [
-    "PlayerScript",
+    "PlayerScr",
 ]

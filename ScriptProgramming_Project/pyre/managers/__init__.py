@@ -4,5 +4,7 @@ from .system_manager import SystemManager
 
 
 __all__ = [
-    "InputManager", "SpriteManager", "SystemManager",
+    "InputManager",
+    "SpriteManager",
+    "SystemManager",
 ]

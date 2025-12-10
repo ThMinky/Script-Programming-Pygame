@@ -25,15 +25,17 @@ class SystemManager:
             self._m_componentsToSystems: dict[Type["BaseComponent"], "BaseSystem"] = {}
             self._m_typesToSystems: dict[Type["BaseSystem"], "BaseSystem"] = {}
 
+            self._Init()
+
     @staticmethod
     def GetInstance() -> "SystemManager":
         if SystemManager.__instance is None:
             SystemManager()
         return SystemManager.__instance
 
-    def Init(self) -> None:
+    def _Init(self) -> None:
         from pyre.components import Sprite
-        from pyre.components.scripts import BaseScript
+        from pyre.components.scripts import MonoScript
         from pyre.components.colliders import BaseCollider
         from pyre.systems import CollisionSystem, RenderSystem, ScriptSystem
 
@@ -42,7 +44,7 @@ class SystemManager:
         self._m_scriptSys = ScriptSystem.GetInstance()
 
         self._m_componentsToSystems = {
-            BaseScript: self._m_scriptSys,
+            MonoScript: self._m_scriptSys,
             Sprite: self._m_renderSys,
             BaseCollider: self._m_collisionSys,
         }

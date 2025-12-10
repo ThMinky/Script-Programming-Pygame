@@ -1,44 +1,39 @@
-from .debug import (
-    ToggleCollidersDebug, ToggleFpsDebug,
+from .base import (
+    AutoTurretScr, BaseScr,
 )
 
 from .enemies import (
-    BasicEnemy, BossTag, EnemySpawner, HellspotEnemy, KamikazeEnemy,    
+    GruntScr, HellspotScr, KamikazeScr,
 )
 
 from .interfaces import (
     IDamagable,
 )
 
-from .player.move_commands import (
-    MoveBackward, MoveForward, RotateLeft, RotateRight,
-)
-
 from .player import (
-    PlayerScript,
+    PlayerScr,
 )
 
-from .base import (
-    Base,
+from .player.move_cmds import (
+    MoveBackwardCmd, MoveForwardCmd, RotateLeftCmd, RotateRightCmd,
 )
 
-from .blocker import (
-    Blocker,
+from .tags import (
+    BlockerTag,
 )
 
-from .projectile import (
-    Projectile,
-)
+from .enemy_spawner_scr import Spawns, EnemySpawnerScr
+
+from .projectile_scr import ProjectileScr
 
 
 __all__ = [
-    "ToggleCollidersDebug", "ToggleFpsDebug",
-    "BasicEnemy", "BossTag", "EnemySpawner", "HellspotEnemy", "KamikazeEnemy",
+    "AutoTurretScr", "BaseScr",
+    "GruntScr", "HellspotScr", "KamikazeScr",
     "IDamagable",
-    "MoveBackward", "MoveForward", "RotateLeft", "RotateRight",
-    "PlayerScript",
-    "Base",
-    "Blocker",
-    "EnemySpawner",
-    "Projectile",
+    "PlayerScr",
+    "MoveBackwardCmd", "MoveForwardCmd", "RotateLeftCmd", "RotateRightCmd",
+    "BlockerTag",
+    "Spawns", "EnemySpawnerScr",
+    "ProjectileScr",
 ]
