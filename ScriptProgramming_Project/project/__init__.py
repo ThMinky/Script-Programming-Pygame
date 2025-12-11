@@ -30,6 +30,8 @@ from .enemy_spawner_scr import Spawns, EnemySpawnerScr
 
 from .projectile_scr import ProjectileScr
 
+from .explosion_vfx_scr import ExplosionVFXScr
+
 from .ui_scr import UIScr
 
 __all__ = [
@@ -43,5 +45,6 @@ __all__ = [
     "BlastAreaScr",
     "Spawns", "EnemySpawnerScr",
     "ProjectileScr",
+    "ExplosionVFXScr",
     "UIScr",
 ]

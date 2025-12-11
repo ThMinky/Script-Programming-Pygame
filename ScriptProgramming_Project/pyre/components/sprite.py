@@ -70,6 +70,12 @@ class Sprite(BaseComponent):
     def Destroy(self) -> None:
         super().Destroy()
 
+    def SetSprite(self, spriteKey: str) -> None:
+        self.m_spriteKey = spriteKey
+
+        self._UpdateScale()
+        self._UpdateRotation()
+
     def _UpdateRotation(self) -> None:
         if self.m_transform is None:
             return

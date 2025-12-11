@@ -1,5 +1,5 @@
 from .components import (
-    BaseComponent, Sprite, Transform,
+    AnimatedSprite, BaseComponent, Sprite, Transform,
 )
 
 from .components.colliders import (
@@ -23,7 +23,8 @@ from .events import (
 )
 
 from .managers import (
-    InputManager, SoundManager, SpriteManager, SystemManager,
+    AnimationData, AnimationManager, InputManager, SoundData, 
+    SoundManager, SpriteData, SpriteManager, SystemManager,
 )
 
 from .systems import (
@@ -47,13 +48,14 @@ from .timer import Timer
 
 
 __all__ = [
-    "BaseComponent", "Sprite", "Transform",
+    "AnimatedSprite", "BaseComponent", "Sprite", "Transform",
     "BaseCollider", "BoxCollider", "CircleCollider", "LineCollider", "PointCollider",
     "MonoScript",
     "Window",
     "Entity",
     "Event",
-    "InputManager", "SoundManager", "SpriteManager", "SystemManager",
+    "AnimationData", "AnimationManager", "InputManager", "SoundData",
+    "SoundManager", "SpriteData", "SpriteManager", "SystemManager",   
     "BaseSystem", "CollisionSystem", "RenderSystem", "ScriptSystem",
     "BoxBox", "BoxCircle", "BoxLine", "BoxPoint",
     "CircleBox", "CircleCircle", "CircleLine", "CirclePoint",

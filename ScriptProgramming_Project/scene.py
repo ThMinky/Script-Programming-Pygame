@@ -9,10 +9,10 @@ import random
 
 import pygame
 
-from pyre.components import Sprite, Transform
+from pyre.components import AnimatedSprite, Sprite, Transform
 from pyre.components.colliders import BoxCollider, LineCollider
 from pyre.entities import Entity
-from pyre.managers import SoundManager, SpriteManager
+from pyre.managers import AnimationManager, SoundManager, SpriteManager
 
 from project.base import AutoTurretScr, BaseScr
 from project.enemies import GruntScr, HellspotScr, KamikazeScr
@@ -22,6 +22,7 @@ from project.ammo_box_scr import AmmoBoxScr
 from project.blast_area_scr import BlastAreaScr
 from project.enemy_spawner_scr import Spawns, EnemySpawnerScr
 from project.projectile_scr import ProjectileScr
+from project.explosion_vfx_scr import ExplosionVFXScr
 from project.ui_scr import UIScr
 
 
@@ -30,6 +31,7 @@ class ELayers(IntEnum):
     DECOR = 1
     INTERACT = 2
     ENTITY = 3
+    VFX = 4
 
 
 class Scene:
@@ -50,6 +52,8 @@ class Scene:
         self.m_ammoBoxes: list["Entity"] = []
 
         self.m_ui: "Entity" | None = None
+
+        self.m_vfx: list["Entity"] = []
 
         # Register Sprites
         # //////////////////////////////////////////////////
@@ -114,6 +118,26 @@ class Scene:
         SoundManager.GetInstance().RegisterSound("projImpact", "resources/sounds/proj_impact.wav")
         SoundManager.GetInstance().RegisterSound("tankFire", "resources/sounds/tank_fire.wav")
         SoundManager.GetInstance().RegisterSound("turretFire", "resources/sounds/turret_fire.wav")
+
+        # //////////////////////////////////////////////////
+
+        # Register Animations
+        # //////////////////////////////////////////////////
+
+        SpriteManager.GetInstance().RegisterSprite("exp1", "resources/vfx/explosion1.png")
+        SpriteManager.GetInstance().RegisterSprite("exp2", "resources/vfx/explosion2.png")
+        SpriteManager.GetInstance().RegisterSprite("exp3", "resources/vfx/explosion3.png")
+        SpriteManager.GetInstance().RegisterSprite("exp4", "resources/vfx/explosion4.png")
+        SpriteManager.GetInstance().RegisterSprite("exp5", "resources/vfx/explosion5.png")
+
+        explosionFrames = ["exp1", "exp2", "exp3", "exp4", "exp5"]
+
+        AnimationManager.GetInstance().RegisterAnimation(
+            key="expVFX",
+            frames=explosionFrames,
+            frameTime=0.1,
+            loop=False,
+        )
 
         # //////////////////////////////////////////////////
 
@@ -512,6 +536,24 @@ class Scene:
         ui.AddComponent(UIScr())
 
         return ui
+
+    def CreateExplosionVFX(self, pos: pygame.Vector2, scale: pygame.Vector2 = pygame.Vector2(1, 1)) -> None:
+        exp = Entity(
+            localPos=pos,
+            localScale=scale,
+        )
+        exp.AddComponent(
+            Sprite(
+                spriteKey="exp1",
+                layer=ELayers.VFX,
+            )
+        )
+        exp.AddComponent(AnimatedSprite(animationKey="expVFX"))
+        exp.AddComponent(ExplosionVFXScr())
+
+        exp.GetComponentByType(ExplosionVFXScr).m_scene = self
+
+        self.m_vfx.append(exp)
 
     def _LoadMapFromFile(self, path) -> list[list[str]]:
         mapData: list[list[str]] = []

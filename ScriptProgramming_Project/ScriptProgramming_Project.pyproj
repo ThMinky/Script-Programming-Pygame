@@ -28,6 +28,7 @@
     <Compile Include="project\base\base_scr.py" />
     <Compile Include="project\base\__init__.py" />
     <Compile Include="project\blast_area_scr.py" />
+    <Compile Include="project\explosion_vfx_scr.py" />
     <Compile Include="project\tags\blocker_tag.py" />
     <Compile Include="project\enemies\grunt_scr.py" />
     <Compile Include="project\enemies\hellspot_scr.py" />
@@ -44,6 +45,7 @@
     <Compile Include="project\ui_scr.py" />
     <Compile Include="project\__init__.py" />
     <Compile Include="main.py" />
+    <Compile Include="pyre\components\animated_sprite.py" />
     <Compile Include="pyre\components\scripts\mono_script.py" />
     <Compile Include="pyre\command.py" />
     <Compile Include="project\player\move_cmds\move_backward_cmd.py" />
@@ -58,6 +60,7 @@
     <Compile Include="pyre\entities\entity.py" />
     <Compile Include="pyre\events\event.py" />
     <Compile Include="pyre\events\__init__.py" />
+    <Compile Include="pyre\managers\animation_manager.py" />
     <Compile Include="pyre\managers\sound_manager.py" />
     <Compile Include="pyre\managers\sprite_manager.py" />
     <Compile Include="pyre\systems\script_system.py" />

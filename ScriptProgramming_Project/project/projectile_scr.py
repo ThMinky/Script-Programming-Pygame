@@ -28,7 +28,7 @@ class ProjectileScr(MonoScript):
         self.m_scene: "Scene" | None = None  # Auto assign
 
         # Caches
-        self.m_transform: "Transform" | None = None
+        self.m_tr: "Transform" | None = None
         self.m_collider: "BaseCollider" | None = None
 
         # Vars
@@ -37,14 +37,14 @@ class ProjectileScr(MonoScript):
         self.m_dir: pygame.Vector2 = dir
 
     def Start(self) -> None:
-        self.m_transform = self.m_parent.GetComponentByType(Transform)
+        self.m_tr = self.m_parent.GetComponentByType(Transform)
         self.m_collider = self.m_parent.GetComponentByType(BaseCollider)
 
     def Update(self) -> None:
         from pyre import Time
-        
-        newPos = self.m_transform.m_worldPos + self.m_speed * self.m_dir * Time.deltaTime
-        self.m_transform.SetPosition(newPos)
+
+        newPos = self.m_tr.m_worldPos + self.m_speed * self.m_dir * Time.deltaTime
+        self.m_tr.SetPosition(newPos)
 
         collision = self.m_collider.GetCollision()
         if collision:
@@ -56,6 +56,8 @@ class ProjectileScr(MonoScript):
                     break
 
             SoundManager.GetInstance().PlaySound("projImpact")
+
+            self.m_scene.CreateExplosionVFX(self.m_tr.m_worldPos)
 
             if self.m_parent in self.m_scene.m_projectiles:
                 self.m_scene.m_projectiles.remove(self.m_parent)

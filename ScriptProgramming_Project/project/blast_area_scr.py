@@ -99,6 +99,8 @@ class BlastAreaScr(MonoScript):
                     script.TakeDamage(self.m_dmg)
                     break
 
+        self.m_scene.CreateExplosionVFX(self.m_center, pygame.Vector2(2, 2))
+
         if self.m_parent in self.m_scene.m_blastAreas:
             self.m_scene.m_blastAreas.remove(self.m_parent)
 

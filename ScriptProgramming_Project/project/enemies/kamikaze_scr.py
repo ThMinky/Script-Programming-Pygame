@@ -3,6 +3,8 @@ from typing import TYPE_CHECKING
 
 import weakref
 
+import pygame
+
 from pyre.components import Transform
 from pyre.components.scripts import MonoScript
 from pyre.managers import SoundManager
@@ -98,6 +100,8 @@ class KamikazeScr(MonoScript, IDamagable):
         if self.m_hp <= 0:
 
             SoundManager.GetInstance().PlaySound("explosion")
+
+            self.m_scene.CreateExplosionVFX(self.m_tr.m_worldPos, pygame.Vector2(2, 2))
 
             if self.m_spawnPoint is not None:
                 self.m_spawnPoint.isLocked = False

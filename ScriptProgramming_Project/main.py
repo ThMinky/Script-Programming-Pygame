@@ -1,4 +1,7 @@
 import os
+
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
 import sys
 import subprocess
 
@@ -26,16 +29,13 @@ def showMenu():
 
 
 def main():
-    baseDir = os.path.dirname(os.path.abspath(__file__))
-    launcherPath = os.path.join(baseDir, "game.py")
-
     while True:
         showMenu()
 
         choice = input("  > ").strip().lower()
 
         if choice == "y":
-            result = subprocess.run([sys.executable, launcherPath])
+            result = subprocess.run([sys.executable, "game.py"])
 
             globals.played_once = True
             globals.won = result.returncode == 1
